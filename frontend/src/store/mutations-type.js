@@ -1,0 +1,5 @@
+export const INCREMENT = 'incrementMessage'
+export const DECREMENT = 'decrement'
+export const INCREMENTCOUNT = 'incrementCount'
+export const ADDSTU = 'addStu'
+export const UPDATE = 'update'

@@ -1,0 +1,28 @@
+{
+  "name": "vue-blog",
+  "version": "1.0.0",
+  "description": "songcy",
+  "main": "app.js",
+  "scripts": {
+    "blog-vue-install": "npm install --prefix blog-vue",
+    "scy": "npm start --prefix blog-vue",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "server": "concurrently \"npm run dev\" \"npm run scy\""
+  },
+  "author": "songcy",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "concurrently": "^6.4.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.14",
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.2",
+    "vue-resource": "^1.5.3"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5"
+  }
+}
