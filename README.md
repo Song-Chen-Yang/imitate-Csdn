@@ -16,4 +16,9 @@ npm run serve
 ```
 npm install
 ```
+## 然后继续在backend目录下启动后端
+```
+node app.js
+```
+
 ### 然后即可在本地8080端口访问
