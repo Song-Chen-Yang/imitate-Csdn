@@ -1,179 +1,184 @@
 <template>
  <div class="">
-  <a-layout-sider width="21vw">
-  <div class="main_content back">
-  <div class="user_info">
-    <img src="@/assets/img/logo.jpg" alt="">
-    <div class="user_info_bio">
-    <p>{{user}}</p>
-    <p><span>码龄1年</span><span><img src="@/assets/img/colleges.png" alt="">河南开封科技传媒学院</span></p>
-    </div>
-  </div>
-  <div class="user_honor">
-  <ul>
-    <!-- <li v-for="(item, index) in userInfo" :key="index">
-  <div class="lis">
-      <p>{{item.num}}</p>
-      <p>{{item.name}}</p>
-  </div>
-    </li> -->
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p><a href="#">原创</a></p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p><a href="#">周排名</a></p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p><a href="#">总排名</a></p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>访问</p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>等级</p>
-  </div>
-    </li>
-    <a-divider></a-divider>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>积分</p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>粉丝</p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>获赞</p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>评论</p>
-  </div>
-    </li>
-    <li>
-  <div class="lis">
-      <p>66</p>
-      <p>收藏</p>
-  </div>
-    </li>
-  </ul>
-  <div class="honor">
-  <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>签到小兵Lv2</span>
-        </template>
-        <img src="@/assets/img/qiandao5@240.png" alt="">
-      </a-tooltip>
-      <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>勤写标兵Lv4</span>
-        </template>
-        <img src="@/assets/img/qixiebiaobing3@240.png" alt="">
-      </a-tooltip>
-      <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>阅读者勋章Lv3</span>
-        </template>
-          <img src="@/assets/img/yuedu90@240.png" alt="">
-      </a-tooltip>
-      <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>持之以恒Lv4</span>
-        </template>
-        <img src="@/assets/img/chizhiyiheng@240.png" alt="">
-      </a-tooltip>
-      <a-tooltip placement="bottom">
-        <template slot="title">
-          <span>分享小兵Lv2</span>
-        </template>
-  <img src="@/assets/img/fengxiangxiaobing@240.png" alt="">
-      </a-tooltip>
-  </div>
-  <div class="connect">
-  <a-button>私信</a-button>
-  <a-button>关注</a-button>
-  </div>
-  </div>
-  </div>
-  <div class="search back">
-  <a-input-search placeholder="搜博主的文章" enter-button="搜索"></a-input-search>
-  </div>
-  <div class="article back">
-  <h4>热门文章</h4>
-  <p><a href="#">八大排序算法C语言过程图解+代码实现（插入，希尔，选择，堆排，冒泡，快排，归并,计数）</a><small><a-icon type="eye" />5554</small></p>
-  <p><a href="#">qsort各种用法大全以及实现</a><small><a-icon type="eye" />5554</small></p>
-  <p><a href="#">你有四个装药丸的罐子，每个药丸都有一定的重量，被污染的药丸是没被污染的重量+1.只称量一次，如何判断哪 个罐子的药被污染了？</a><small><a-icon type="eye" />5554</small></p>
-  </div>
-  <div class="rate back">
-  <h4>您愿意向朋友推荐“博客详情页”吗？</h4>
-  <div ref="imgs" class="rate_num" @click="rateClick">
-  <img src='@/assets/img/rate/rate1active.png' name="1" alt="">
-  <img src='@/assets/img/rate/rate2active.png' name="2" alt="">
-  <img src='@/assets/img/rate/rate3active.png' name="3" alt="">
-  <img src='@/assets/img/rate/rate4active.png' name="4" alt="">
-  <img src='@/assets/img/rate/rate5active.png' name="5" alt="">
-  </div>
-  <div class="rate_text"><span>差评差评</span><span>不推荐</span><span>一般般</span><span>推荐</span><span>强烈推荐</span></div>
-  <div v-if="visible" style="margin: 5px 0;"><a-input-search enter-button="提交"></a-input-search></div>
-  </div>
-  </a-layout-sider>
+    <a-layout-sider width="21vw">
+      <div class="main_content back">
+        <div class="user_info">
+          <img src="@/assets/img/logo.jpg" alt="">
+          <div class="user_info_bio">
+          <p>{{user.username}}</p>
+          <p><span>码龄1年</span><span><img src="@/assets/img/colleges.png" alt="">河南开封科技传媒学院</span></p>
+          </div>
+        </div>
+        <div class="user_honor">
+        <ul>
+          <!-- <li v-for="(item, index) in userInfo" :key="index">
+        <div class="lis">
+            <p>{{item.num}}</p>
+            <p>{{item.name}}</p>
+        </div>
+          </li> -->
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p><a href="#">原创</a></p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p><a href="#">周排名</a></p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p><a href="#">总排名</a></p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>访问</p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>等级</p>
+            </div>
+          </li>
+          <a-divider></a-divider>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>积分</p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>粉丝</p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>获赞</p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>评论</p>
+            </div>
+          </li>
+          <li>
+            <div class="lis">
+                <p>66</p>
+                <p>收藏</p>
+            </div>
+          </li>
+        </ul>
+        <div class="honor">
+        <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>签到小兵Lv2</span>
+              </template>
+              <img src="@/assets/img/qiandao5@240.png" alt="">
+            </a-tooltip>
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>勤写标兵Lv4</span>
+              </template>
+              <img src="@/assets/img/qixiebiaobing3@240.png" alt="">
+            </a-tooltip>
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>阅读者勋章Lv3</span>
+              </template>
+                <img src="@/assets/img/yuedu90@240.png" alt="">
+            </a-tooltip>
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>持之以恒Lv4</span>
+              </template>
+              <img src="@/assets/img/chizhiyiheng@240.png" alt="">
+            </a-tooltip>
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>分享小兵Lv2</span>
+              </template>
+        <img src="@/assets/img/fengxiangxiaobing@240.png" alt="">
+            </a-tooltip>
+        </div>
+          <div class="connect">
+            <a-button>私信</a-button>
+            <a-button>关注</a-button>
+          </div>
+        </div>
+      </div>
+      <div class="search back">
+      <a-input-search placeholder="搜博主的文章" enter-button="搜索"></a-input-search>
+      </div>
+      <div class="article back">
+      <h4>热门文章</h4>
+      <p><a href="#">八大排序算法C语言过程图解+代码实现（插入，希尔，选择，堆排，冒泡，快排，归并,计数）</a><small><a-icon type="eye" />5554</small></p>
+      <p><a href="#">qsort各种用法大全以及实现</a><small><a-icon type="eye" />5554</small></p>
+      <p><a href="#">你有四个装药丸的罐子，每个药丸都有一定的重量，被污染的药丸是没被污染的重量+1.只称量一次，如何判断哪 个罐子的药被污染了？</a><small><a-icon type="eye" />5554</small></p>
+      </div>
+      <div class="rate back">
+      <h4>您愿意向朋友推荐“博客详情页”吗？</h4>
+      <div ref="imgs" class="rate_num" @click="rateClick">
+      <img src='@/assets/img/rate/rate1active.png' name="1" alt="">
+      <img src='@/assets/img/rate/rate2active.png' name="2" alt="">
+      <img src='@/assets/img/rate/rate3active.png' name="3" alt="">
+      <img src='@/assets/img/rate/rate4active.png' name="4" alt="">
+      <img src='@/assets/img/rate/rate5active.png' name="5" alt="">
+      </div>
+      <div class="rate_text"><span>差评差评</span><span>不推荐</span><span>一般般</span><span>推荐</span><span>强烈推荐</span></div>
+      <div v-if="visible" style="margin: 5px 0;"><a-input-search enter-button="提交"></a-input-search></div>
+      </div>
+    </a-layout-sider>
  </div>
 </template>
 
 <script>
+import { getSelfMsg } from '@/axios/api/message'
 export default {
   data () {
     return {
-    visible: false,
-    user: {}
+      visible: false,
+      user: {}
     }
   },
   methods: {
+    async getUserInfo() {
+      let userId = this.$store.state.useruuid
+      let { data } = await getSelfMsg({ userId })
+      this.user = data[0]
+    },
     rateClick (e) {
-    let imgs = this.$refs.imgs.childNodes
-  for(let i = 0; i < imgs.length; i++) {
-    imgs[i].style.opacity = '.5'
-    imgs[i].style.transform = 'none'
-  }
-    if(e.target.name) {
-  this.visible = true
-    let idx = e.target.name
-      imgs[idx - 1].style.opacity= '1'
-      imgs[idx - 1].style.transform= 'translateY(-8px)'
-      document.querySelector('.feedback').style.visibility = 'visible'
-    }
+      let imgs = this.$refs.imgs.childNodes
+      for(let i = 0; i < imgs.length; i++) {
+        imgs[i].style.opacity = '.5'
+        imgs[i].style.transform = 'none'
+      }
+      if(e.target.name) {
+      this.visible = true
+      let idx = e.target.name
+        imgs[idx - 1].style.opacity= '1'
+        imgs[idx - 1].style.transform= 'translateY(-8px)'
+        document.querySelector('.feedback').style.visibility = 'visible'
+      }
     }
   },
   created() {
-  this.user = JSON.parse(localStorage.watchOne).username
-  console.log(this.user);
-}
+    this.getUserInfo()
+  }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .ant-layout-sider {
   background-color: inherit;
   min-height: 88vh;
@@ -202,18 +207,23 @@ ul {
   padding: 0 5px;
   flex-wrap: wrap;
   justify-content: space-around;
-}
-ul li {
-  white-space: nowrap;
-  text-align: center;
-  width: 50px;
-  /* background-color: khaki; */
-}
-ul li .lis p:first-child {
-  color: #000;
-}
-ul li .lis p:last-child {
-  color: rgb(122, 121, 121);
+  li {
+    white-space: nowrap;
+    text-align: center;
+    width: 50px;
+    /* background-color: khaki; */
+    .lis {
+      p {
+        margin: 0;
+        &:first-child {
+          color: #000;
+        }
+        &:last-child {
+          color: rgb(122, 121, 121);
+        }
+      }
+    }
+  }
 }
 /* ul li::after {
   content: '';
@@ -227,9 +237,6 @@ ul li .lis p:last-child {
   color: #d63031;
   cursor: pointer;
 } */
-ul li p {
-  margin: 0;
-}
 .user_info {
   display: flex;
   justify-content: flex-start;

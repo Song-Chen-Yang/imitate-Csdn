@@ -1,35 +1,37 @@
 <template>
- <div class="" id="app">
- <a-table :pagination="pagination" :dataSource="data" :columns="columns" :row-key="record => record.id" :scroll="{ x: 1200, y: 450 }" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }">
- <!-- <span slot="order" slot-scope="text">{{ order(text) }}</span> -->
- <template slot="messagetitle" slot-scope="text"><a :href="href" @click="texthref(text)">{{ text }}</a></template>
- <span slot="open"><a-switch default-checked @change="onChange" /></span>
- <span slot="action" slot-scope="text, record">
- <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="confirm(text, record)">
-        <template slot="title">
-          <p>您确定要删除吗？</p>
-        </template>
-        <a-icon type="delete" theme='twoTone' twoToneColor='#1890FF'></a-icon>
-      </a-popconfirm>
-  <a-divider type="vertical"></a-divider>
-  <a-icon type="edit" theme='twoTone' twoToneColor='#1890FF'></a-icon>
- </span>
- </a-table>
- </div>
+  <div class="" id="app">
+    <a-table :pagination="pagination" :dataSource="msgList" :columns="columns" :row-key="record => record.msgId" :scroll="{ x: 1200, y: 450 }" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }">
+      <span slot="index" slot-scope="text, record" v-for="(item, index) in msgList">{{ index }}</span>
+      <!-- <template slot="order" slot-scope="text">{{ text }}</template> -->
+      <template slot="messagetitle" slot-scope="text"><a :href="href" @click="texthref(text)">{{ text }}</a></template>
+      <span slot="open"><a-switch default-checked @change="onChange" /></span>
+      <span slot="action" slot-scope="text, record">
+        <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="deleteMsg(text.msgId)">
+          <template slot="title">
+            <p>您确定要删除吗？</p>
+          </template>
+          <a-icon type="delete" theme='twoTone' twoToneColor='#1890FF'></a-icon>
+        </a-popconfirm>
+        <a-divider type="vertical"></a-divider>
+        <a-icon type="edit" theme='twoTone' twoToneColor='#1890FF' @click="edit(text.msgId)"></a-icon>
+      </span>
+    </a-table>
+  </div>
 </template>
 <script>
+import { getSelfMsg, delMsg } from '@/axios/api/message'
 const columns = [
   {
     title: '序号',
-    dataIndex: 'order',
-    key: 'order',
+    dataIndex: 'index',
+    key: 'index',
     align: 'center',
-    scopedSlots: { customRender: 'order' }
+    scopedSlots: { customRender: 'index' }
   },
   {
     title: '文章',
-    dataIndex: 'title',
-    key: 'title',
+    dataIndex: 'msgTitle',
+    key: 'msgTitle',
     width: 240,
     align: 'center',
     scopedSlots: { customRender: 'messagetitle' },
@@ -44,9 +46,9 @@ const columns = [
   },
   {
     title: '发布时间',
-    dataIndex: 'time',
+    dataIndex: 'msgDate',
     width: 260,
-    key: 'time',
+    key: 'msgDate',
     align: 'center'
   },
   {
@@ -128,10 +130,10 @@ export default {
   name: "message",
   data () {
     return {
-      data: [],
+      msgList: [],
       columns,
       total: () => {
-        return this.data.length
+        return this.msgList.length
       },
       pagination: {
       size: 'small',
@@ -154,24 +156,27 @@ export default {
   }
 },
 created() {
-  this.getData()
+  this.getSelfMsg()
 },
 methods: {
-  getData() {
-    this.$http.get('http://127.0.0.1:3000/message',true).then(res => {
-      this.data = res.body
-    })
+  async getSelfMsg() {
+    let userId = this.$store.state.useruuid
+    let { data } = await getSelfMsg({ userId })
+    this.msgList = data
   },
   onSelectChange(selectedRowKeys, selectedRows) {
     console.log(selectedRowKeys, selectedRows)
     this.selectedRowKeys = selectedRowKeys
   },
-  confirm(text, record) {
-  console.log(text.id);
-  this.$http.delete('http://127.0.0.1:3000/message/'+ text.id).then(() => {
-    this.getData()
-  })
-    this.$message.success('已删除')
+  async deleteMsg(msgId) {
+    let data = await delMsg({ msgId })
+    if(data) {
+      this.$message.success('删除成功~')
+      this.getSelfMsg()
+    }
+  },
+  edit(msgId) {
+    console.log(msgId);
   },
   onChange(checked) {
       console.log(`a-switch to ${checked}`)

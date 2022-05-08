@@ -30,7 +30,7 @@
       <p v-show="editstatus.gender" id="gender">
         <input v-model="currentUser.gender" type="radio" name="gender" value="1"/>男
         <input v-model="currentUser.gender" type="radio" name="gender" value="0" />女
-        <input v-model="currentUser.gender" type="radio" name="gender" value="2" />保密
+        <input v-model="currentUser.gender" type="radio" name="gender" value="-1" />保密
         <a-button style="margin: 0 10px;" type="primary" @click="editok" shape="round" ghost>确定</a-button>
         <a-button type="danger" @click="editcancel" shape="round">取消</a-button>
       </p>
@@ -116,7 +116,6 @@
       size="default"
       :value="EduInfo.grduaDate"
       @change="grduaDateChoose"
-      @open="true"
       placeholder="Select Month"
       format="YYYY-MM" />
     <!-- <a-range-picker
@@ -183,7 +182,7 @@ export default {
         xueli: '',
         schoolVal:  '', // 学校
         majorVal: '', // 专业
-        grduaDate: [], // 入学-毕业时间
+        grduaDate: [], // 入学时间
       },
       education: ['博士', '研究生', '大学本科', '专科', '职教', '高中', '初中', '小学'], // 学历
     }
@@ -197,9 +196,11 @@ export default {
       let { data } = await getUser({ uuid })
       data.birthday = this.dayjs(data.birthday).format('YYYY-MM-DD')
       this.currentUser = data
-      this.EduInfo = data.educationInfo
+      if(data.educationInfo) {
+        this.EduInfo = data.educationInfo
+        this.EduInfo.grduaDate = moment(this.EduInfo.grduaDate)
+      }
       // this.EduInfo.grduaDate = this.EduInfo.grduaDate.split('-').map(item => item.replace(/\//g, '-'))
-      this.EduInfo.grduaDate = moment(this.EduInfo.grduaDate)
     },
     // 个人信息的编辑
     edit(e) {

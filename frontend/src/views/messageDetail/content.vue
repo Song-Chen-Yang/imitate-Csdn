@@ -2,10 +2,10 @@
   <div id="app">
     <a-layout-content>
       <div class="title">
-        <h1>{{message.title}}</h1>
+        <h1>{{message.msgTitle}}</h1>
       </div>
       <div class="messageInfo">
-        <p><span>我希望</span><span>{{message.time}}</span><span><a-icon type="eye" /> 5554</span><span><a-icon type="star" theme="filled" /> 收藏4</span></p>
+        <p><span>我希望</span><span>{{message.msgDate}}</span><span><a-icon type="eye" /> 5554</span><span><a-icon type="star" theme="filled" /> 收藏{{message.stars}}</span></p>
         <p>分类专栏：<small><a-tag color="#95a5a6" style="font-size: .5rem;">面试智力题</a-tag></small></p>
         <span class="label">原创</span>
       </div>
@@ -29,14 +29,15 @@
 <script>
 
 export default {
+  props:[
+    'message'
+  ],
   data () {
     return {
-    message: {}
   }
 },
 created() {
-  this.message = JSON.parse(localStorage.watchOne)
-  console.log('路由传参', this.$route.query.messages);
+  console.log(this.message);
 }
 }
 </script>

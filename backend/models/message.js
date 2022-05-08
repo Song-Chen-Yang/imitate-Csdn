@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
-var { v4: uuidv4 } = require('uuid')
+// var { v4: uuidv4 } = require('uuid')
+var { nanoid } = require('nanoid')
 var Schema = mongoose.Schema
 
 var messageSchema = new mongoose.Schema({
@@ -11,10 +12,14 @@ var messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  userAvatar: {
+    type: String,
+    required: true
+  },
   msgId: {
     type: String,
     required: true,
-    default: uuidv4()
+    default: nanoid()
   },
   msgTitle: {
     type: String,

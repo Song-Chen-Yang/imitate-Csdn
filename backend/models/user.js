@@ -1,5 +1,7 @@
 var mongoose = require('mongoose')
-var { v4: uuidv4 } = require('uuid')
+// var { v4: uuidv4 } = require('uuid')
+var { nanoid } = require('nanoid')
+var moment = require('moment')
 var Schema = mongoose.Schema
 
 // 连接数据库
@@ -8,7 +10,7 @@ var userSchema = new Schema({
   uuid: {
     type: String,
     rquired: true,
-    default: uuidv4()
+    default: nanoid()
   },
   email: {
     type: String,
@@ -24,11 +26,11 @@ var userSchema = new Schema({
   },
   created_time: {
     type: Date,
-    default: Date.now // 在new 一个模型的时候会自动调用， 有() 他会自动调用， 并且值不改变
+    default: moment().format("YYYY-MM-DD H:mm:ss").toString()
   },
   last_modified_time: { // 最后修改时间
     type: Date,
-    default: Date.now
+    default: moment().format("YYYY-MM-DD H:mm:ss").toString()
   },
   avater: { // 默认头像
     type: String,
@@ -44,9 +46,9 @@ var userSchema = new Schema({
     default: -1
   },
   birthday: {
-    type: Date,
+    type: String,
     max_line_len: 10,
-    default: ''
+    default: moment().format("YYYY-MM-DD")
   },
   status: {
     type: Number,

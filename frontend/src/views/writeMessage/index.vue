@@ -8,7 +8,10 @@
         </div>
         <div class="right">
           <span>{{currentUser.username}}</span>
-          <span><img style="width: 35px; border-radius: 50px;" src="@/assets/img/logo.jpg" alt=""></span>
+          <span>
+          <img v-if="currentUser.avater.length < 100" style="width: 35px; border-radius: 50px;" src="@/assets/img/logo.jpg" alt="">
+          <img v-else style="width: 35px; border-radius: 50px;" :src="currentUser.avater" alt="">
+          </span>
           <span><a href="#">消息</a></span>
         </div>
       </a-layout-header>

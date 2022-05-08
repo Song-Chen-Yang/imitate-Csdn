@@ -119,6 +119,7 @@
 </template>
 <script>
 import { login, register } from '@/axios/api/user'
+import crypto from 'crypto'
 export default {
   data() {
     return {
@@ -135,24 +136,31 @@ export default {
       emailErrVisible: false,
     };
   },
-  created() {
-  },
   methods: {
+    // 加密
+    setMd5(pwd){
+      var md5 = crypto.createHash("md5")
+      md5.update(pwd)
+      return md5.digest('hex')
+    },
+    // 登录
     async login() {
       if(!this.loginForm.username || this.loginForm.password.length < 6) {
         this.$message.error('用户名长度需大于3,密码至少6位')
         return false
       }
+      this.loginForm.password =  this.setMd5(this.loginForm.password)
       let res = await login(this.loginForm)
       if(!res?.data?.data) {
         return false
       }
       this.$message.success('登录成功!')
       this.$store.dispatch('acLogin', res.data.data)
-      localStorage.setItem('token', JSON.stringify(res.data.token))
+      localStorage.setItem('token', res.data.token)
       localStorage.setItem('uuid', res.data.data.uuid)
       this.$router.push({path: '/index'})
     },
+    // 监听邮件输入框
     emailChange(e) {
       if (e.bubbles) {
         if (!e.target.value.includes("@") && !e.target.value.includes(".com")) {
@@ -167,21 +175,24 @@ export default {
         }
       }
     },
+    // 注册
     async regist() {
       if (!this.regForm.email.includes("@") || !this.regForm.email.includes(".com")) {
         return false
       }
       if(this.regForm.username.length < 1 || this.regForm.password.length < 6) {
-        // this.$message.error('用户名长度需大于3,密码至少6位')
+        this.$message.error('用户名长度需大于3,密码至少6位')
         return false
       }
+      this.regForm.password = this.setMd5(this.regForm.password)
       let data = await register(this.regForm)
-      // this.$store.dispatch('acregist', this.regForm)
       this.$message.success('注册成功，即将自动登录')
+      localStorage.setItem('uuid', res.data.data.uuid)
       setTimeout(() => {
         this.$router.push({path: '/index'})
       }, 1500)
     },
+    // 去注册按钮
     toregist() {
       this.status = 1;
       setTimeout(() => {
@@ -189,6 +200,7 @@ export default {
         this.$refs.regForm.style.visibility = "visible";
       }, 500);
     },
+    // 去登录按钮
     toLogin() {
       this.status = 2;
       this.$refs.toLogin.style.visibility = "hidden";

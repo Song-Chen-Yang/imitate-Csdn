@@ -18,7 +18,7 @@ localStorage.message = JSON.stringify(localMessage)
 const state = {
   Message: JSON.parse(localStorage.message),
   token: localStorage.getItem('token'),
-  useruuid: JSON.parse(localStorage.getItem('currentUser')).uuid
+  useruuid: localStorage.getItem('uuid')
 }
 // 2、创建对象
 const store = new Vuex.Store({

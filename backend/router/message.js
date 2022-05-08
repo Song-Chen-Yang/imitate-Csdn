@@ -9,6 +9,7 @@ router.post('/saveMsg', async (req, res) => {
   const {
     userId,
     username,
+    userAvatar,
     msgId,
     msgTitle,
     msgContent,
@@ -17,6 +18,7 @@ router.post('/saveMsg', async (req, res) => {
   let data = await new msgSchema({
     userId,
     username,
+    userAvatar,
     msgId,
     msgTitle,
     msgContent,
@@ -42,6 +44,27 @@ router.post('/collectMsg', async (req, res) => {
 router.post('/likeMsg', async (req, res) => {
   const { msgId, likes } = req.body
   let data = await msgSchema.updateOne({ msgId }, { $set: { likes }})
+  if(data) res.send(data)
+})
+
+// 根据用户id获取自己的文章
+router.post('/getSelfMsg', async (req, res) => {
+  const { userId } = req.body
+  let data = await msgSchema.find({ userId })
+  if(data) res.send(data)
+})
+
+// 根据文章id获取文章
+router.post('/getMsgById', async (req, res) => {
+  const { msgId } = req.body
+  let data = await msgSchema.find({ msgId })
+  if(data) res.send(data)
+})
+
+// 删除文章
+router.post('/delMsg', async (req, res) => {
+  const { msgId } = req.body
+  let data = await msgSchema.deleteOne({ msgId })
   if(data) res.send(data)
 })
 

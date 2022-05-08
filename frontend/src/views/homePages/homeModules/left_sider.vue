@@ -49,7 +49,7 @@ export default {
 }
 .siderFix {
   position:sticky;
-  top: 12.3vh;
+  top: 10.3vh;
 }
 #app .recommend {
   width: 100%;

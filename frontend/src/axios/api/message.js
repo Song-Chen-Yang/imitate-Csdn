@@ -17,6 +17,15 @@ export function getMsg() {
   })
 }
 
+// 根据用户的id获得文章
+export function getSelfMsg(data) {
+  return request({
+    url: '/getSelfMsg',
+    method: 'post',
+    data
+  })
+}
+
 // 收藏文章
 export function collectMsg(data) {
   return request({
@@ -30,6 +39,24 @@ export function collectMsg(data) {
 export function likeMsg(data) {
   return request({
     url: '/likeMsg',
+    method: 'post',
+    data
+  })
+}
+
+// 删除文章
+export function delMsg(data) {
+  return request({
+    url: '/delMsg',
+    method: 'post',
+    data
+  })
+}
+
+// 根据文章id获取文章
+export function getMsgById(data) {
+  return request({
+    url: '/getMsgById',
     method: 'post',
     data
   })

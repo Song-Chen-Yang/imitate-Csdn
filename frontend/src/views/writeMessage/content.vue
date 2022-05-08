@@ -42,6 +42,7 @@ methods: {
     let Messages = {
       userId: this.currentUser.uuid,
       username: this.currentUser.username,
+      userAvatar: this.currentUser.avater,
       msgTitle: this.title,
       msgContent: this.$refs.richedit.innerText,
       msgDate: date.toLocaleString()
@@ -55,7 +56,7 @@ methods: {
 },
 filters:{
   titleLen(val) {
-    return val.length >= 5 ? val.length +'/100' : '还需输入'+(5-val.length)+'个字'
+    return val.length >= 5 ? val.length +'/40' : '还需输入'+(5-val.length)+'个字'
   }
 },
 computed: {

@@ -34,10 +34,10 @@
     </div>
     <!--  文章列表 -->
     <a-list item-layout="vertical" size="large" :data-source="msgList">
-        <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item)">
+        <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.msgId)">
           <a-list-item-meta>
             <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
-            <a-avatar slot="avatar" :src="item.avater"/>
+            <a-avatar slot="avatar" :src="item.userAvatar"/>
           </a-list-item-meta>
           <a target="_blank">{{ item.msgContent | textEllipsis}}</a> <!-- 文章内容 -->
           <!-- <template v-for="{type, text} in actions" style="user-select: none;" slot="actions">
@@ -93,23 +93,7 @@ export default {
   async getMessage() {
     let { data } = await getMsg()
     this.msgList = data.reverse()
-    console.log(this.msgList);
   },
-  // interaction (e) {
-  //   const type = e.srcElement.dataset.icon
-  //   if(type == 'star') {
-  //     // this.$http.patch('http://127.0.0.1:3000/message/' + this.goalItem.id, {star: this.goalItem.star += 1}).then(res => {
-  //       console.log('收藏成功!')
-  //     // })
-  //     this.$message.success('收藏成功')
-  //   } else if (type == 'like') {
-  //     // this.$http.patch('http://127.0.0.1:3000/message/' + this.goalItem.id, {like: this.goalItem.like += 1}).then(res => {
-  //       console.log('喜欢成功!')
-  //     // })
-  //   } else if (type == 'message') {
-  //     console.log('评论...')
-  //   }
-  // },
   async interact (msgId, num, type) {
     num++
     if(type == 'stars') {
@@ -131,9 +115,8 @@ export default {
     this.goalItem = item
     // console.log(this.goalItem);
   },
-  watchOne(val) {
-    localStorage.watchOne = JSON.stringify(val)
-    this.$router.push({path: '/userMessage', query: { messages: val }})
+  watchOne(msgId) {
+    this.$router.push({path: '/messageDetail', query: { msgId }})
   },
   loadMessage() {
     // this.$http.get('http://127.0.0.1:3000/message').then(res => {
@@ -162,6 +145,7 @@ export default {
     }
   },
   created() {
+    localStorage.removeItem('token')
     this.getMessage()
   },
   mounted() {

@@ -1,26 +1,42 @@
 <template>
- <div class="" id="app">
-  <a-layout>
-  <Header></Header>
-  <a-layout class="main_content">
-  <Sider class="sider"></Sider>
-  <Content class="content"></Content>
-  </a-layout>
-  <Footer></Footer>
-  </a-layout>
- </div>
+  <div class="" id="app">
+    <a-layout>
+      <Header></Header>
+      <a-layout class="main_content">
+        <Sider class="sider"></Sider>
+        <Content class="content" :message="message[0]"></Content>
+      </a-layout>
+      <Footer></Footer>
+    </a-layout>
+  </div>
 </template>
 <script>
 import Header from '@/components/common/header'
 import Sider from '@/views/messageDetail/sider'
 import Content from '@/views/messageDetail/content'
 import Footer from '@/components/common/footer'
+import { getMsgById } from '@/axios/api/message'
 export default {
   components: {
   Header,
   Sider,
   Content,
   Footer
+  },
+  data() {
+    return {
+      message: {}
+    }
+  },
+  methods: {
+    async getMsg() {
+      const { msgId } = this.$route.query
+      let { data } = await getMsgById({ msgId })
+      this.message = data
+    }
+  },
+  created() {
+    this.getMsg()
   }
 }
 </script>

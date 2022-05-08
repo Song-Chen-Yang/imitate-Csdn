@@ -3,7 +3,7 @@
     <a-layout-header :class="{fixHeader: scrollTop >= 100}">
       <a-row type="flex">
         <a-col :span="1">
-          <a href="/index"><img style="width: 35px; border-radius: 50px;" :src="currentUser.avater" alt=""></a>
+          <a href="/index"><img style="width: 35px; border-radius: 50px;" src="@/assets/img/avatar.jpg" alt=""></a>
         </a-col>
         <a-col :span="10">
         <div style="white-space: nowrap;width: 550px;height: 100%;">
@@ -39,7 +39,9 @@
               <a-space size="small">
             <span>
               <a-dropdown>
-                <a-badge :count="1"><img :src="currentUser.avater" alt=""></a-badge>
+                <a-badge :count="1">
+                <img v-if="isDefault" src="@/assets/img/avatar.jpg" alt="">
+                <img v-else :src="currentUser.avater" alt=""></a-badge>
                 <a-menu slot="overlay" style="margin-top:8px;">
                   <a-menu-item key="1" class="messageList">
                     <router-link to="/index/profile">
@@ -124,7 +126,8 @@ export default {
       menu: ['博客', '专栏课程', '问答', '社区', '下载', '插件'],
       current: ['博客'],
       scrollTop: '',
-      writeStatus: false
+      writeStatus: false,
+      isDefault: false // 是否默认头像
     }
   },
   methods: {
@@ -132,6 +135,9 @@ export default {
       let uuid  = this.$store.state.useruuid
       let { data } = await getUser({ uuid })
       this.currentUser = data
+      if(this.currentUser.avater.search('base64') == '-1') {
+        this.isDefault = true
+      }
     },
     onfocus() { // 搜索框聚焦
       setTimeout(() => {
@@ -165,7 +171,7 @@ export default {
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     },
     exit() {
-      delete localStorage['currentcurrentUser']
+      delete localStorage['currentUser']
       this.$message.success('已退出')
       this.reload()
       this.$router.push({path: '/login'})
