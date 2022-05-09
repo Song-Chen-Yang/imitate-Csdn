@@ -31,18 +31,11 @@
 export default {
   props:[
     'message'
-  ],
-  data () {
-    return {
-  }
-},
-created() {
-  console.log(this.message);
-}
+  ]
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .ant-layout-content {
   min-height: 88vh;
   background-color: inherit;
@@ -62,24 +55,24 @@ created() {
   padding-left: 30px;
   position: relative;
   overflow: hidden;
-}
-.messageInfo p {
-  margin: 5px;
-}
-.messageInfo p span {
-  font-size: .9rem;
-  margin-right: 20px;
-}
-.messageInfo .label {
-  position: absolute;
-  background-color: #d35400;
-  padding: 2px 16px;
-  transform: rotate(-45deg);
-  left: -16px;
-  top: 1px;
-  font-size: .4rem;
-  color: #fff;
-  user-select: none;
+  p {
+    margin: 5px;
+    span {
+      font-size: .9rem;
+      margin-right: 20px;
+    }
+  }
+  .label {
+    position: absolute;
+    background-color: #d35400;
+    padding: 2px 16px;
+    transform: rotate(-45deg);
+    left: -16px;
+    top: 1px;
+    font-size: .4rem;
+    color: #fff;
+    user-select: none;
+  }
 }
 .includes {
   background-color: #a7aaaa31;
@@ -90,29 +83,30 @@ created() {
   justify-content: space-between;
   align-items: center;
   transition: box-shadow .4s ease-in-out 0s;
+    &:hover {
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.459),
+      -1px -1px 3px rgba(0, 0, 0, 0.459);
+    }
+  span {
+    &:first-child {
+      display: flex;
+      flex-flow: row;
+      align-items: center;
+    }
+    label {
+      margin-right: 15px;
+    }
+    h3 {
+      margin: auto 5px;
+      &:hover {
+        color: #d63031;
+        cursor: pointer;
+      }
+    }
+    img {
+      width: 30px;
+      height: 30px;
+    }
+  }
 }
-.includes:hover {
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.459),
-  -1px -1px 3px rgba(0, 0, 0, 0.459);
-}
-.includes span:first-child {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
-}
-.includes span label {
-  margin-right: 15px;
-}
-.includes span h3 {
-  margin: auto 5px;
-}
-.includes span h3:hover {
-  color: #d63031;
-  cursor: pointer;
-}
-.includes span img {
-  width: 30px;
-  height: 30px;
-}
-
 </style>

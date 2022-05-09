@@ -80,7 +80,6 @@
                     style="color: rgba(0, 0, 0, 0.25)"
                   />
                 </a-input>
-                </a-input-group>
               </a-tooltip>
             </a-form-model-item>
             <a-form-model-item>

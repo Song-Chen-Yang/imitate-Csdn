@@ -4,20 +4,20 @@
   <a-layout id="components-layout-demo-custom-trigger">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="logo" @click="toIndex" >首页</div>
-      <a-menu theme="light" mode="inline" :default-selected-keys="['1']">
-        <a-menu-item key="1">
-        <router-link to="profile">
-          <a-icon type="user" />
-          <span>个人资料</span>
-        </router-link>
-        </a-menu-item>
-        <a-menu-item key="2">
-        <router-link to="/index/profile/message">
-          <a-icon type="file" />
-          <span>文章管理</span>
+      <a-menu theme="light" mode="inline" :default-selected-keys="defaultSelectedKyes">
+        <a-menu-item key="userProfile">
+          <router-link to="userProfile">
+            <a-icon type="user" />
+            <span>个人资料</span>
           </router-link>
         </a-menu-item>
-        <a-menu-item key="3">
+        <a-menu-item key="message">
+          <router-link to="message">
+            <a-icon type="file" />
+            <span>文章管理</span>
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="tool">
           <a-icon type="tool" />
           <span>设置</span>
         </a-menu-item>
@@ -51,14 +51,20 @@ export default {
   data() {
     return {
       collapsed: false,
+      defaultSelectedKyes: [this.$router.currentRoute.name]
     };
+  },
+  watch: {
+    // $route(to, from) {
+    //   console.log(to, from);
+    // }
   },
   methods: {
     toIndex() {
       this.$router.push({path: '/index'})
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 #app {

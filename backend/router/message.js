@@ -68,4 +68,17 @@ router.post('/delMsg', async (req, res) => {
   if(data) res.send(data)
 })
 
+// 更新文章
+router.post('/updateMsg', async (req, res) => {
+  const {
+    msgId,
+    username,
+    userAvatar,
+    msgTitle,
+    msgContent,
+    msgDate
+  } = req.body
+  let data = await msgSchema.updateOne({ msgId }, { username, userAvatar, msgTitle, msgContent, msgDate })
+  if(data) res.send(data)
+})
 module.exports = router

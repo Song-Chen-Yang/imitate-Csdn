@@ -29,13 +29,9 @@ const routes = [
       title: '个人资料'
     },
     children: [
-    {
-      path: '/index/profile',
-      redirect: '/index/profile/profile'
-    },
      {
-      path: 'profile',
-      name: 'profile',
+      path: 'userProfile',
+      name: 'userProfile',
       component: () => import('@/views/userProfile/profile'),
       meta: {
         title: '个人信息'

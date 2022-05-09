@@ -44,12 +44,14 @@
                 <img v-else :src="currentUser.avater" alt=""></a-badge>
                 <a-menu slot="overlay" style="margin-top:8px;">
                   <a-menu-item key="1" class="messageList">
-                    <router-link to="/index/profile">
-                    个人资料
+                    <router-link to="/index/profile/userProfile">
+                      个人资料
                     </router-link>
                   </a-menu-item>
                   <a-menu-item key="2" class="messageList">
-                    文章管理
+                    <router-link to="/index/profile/message">
+                      文章管理
+                    </router-link>
                   </a-menu-item>
                   <a-menu-item key="3" @click="exit" class="messageList">
                     退出

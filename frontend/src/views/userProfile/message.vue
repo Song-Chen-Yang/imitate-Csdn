@@ -13,7 +13,12 @@
           <a-icon type="delete" theme='twoTone' twoToneColor='#1890FF'></a-icon>
         </a-popconfirm>
         <a-divider type="vertical"></a-divider>
-        <a-icon type="edit" theme='twoTone' twoToneColor='#1890FF' @click="edit(text.msgId)"></a-icon>
+        <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="editMsg(text.msgId)">
+          <template slot="title">
+            <p>您确定要去编辑吗？</p>
+          </template>
+          <a-icon type="edit" theme='twoTone' twoToneColor='#1890FF'></a-icon>
+        </a-popconfirm>
       </span>
     </a-table>
   </div>
@@ -175,8 +180,10 @@ methods: {
       this.getSelfMsg()
     }
   },
-  edit(msgId) {
-    console.log(msgId);
+  editMsg(msgId) {
+    if(msgId) {
+      this.$router.push({path: '/writeMessage', query: { msgId }})
+    }
   },
   onChange(checked) {
       console.log(`a-switch to ${checked}`)

@@ -160,9 +160,7 @@ export default {
   name: "userFile",
   data () {
     return {
-      currentUser: {
-        birthday: null
-      },
+      currentUser:{},
       form: this.$form.createForm(this, { name: 'coordinated' }),
       formLayout: 'horizontal',
       editstatus: { // 个人信息显示状态

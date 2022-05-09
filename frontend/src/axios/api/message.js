@@ -61,3 +61,12 @@ export function getMsgById(data) {
     data
   })
 }
+
+// 更新文章
+export function updateMsg(data) {
+  return request({
+    url: '/updateMsg',
+    method: 'post',
+    data
+  })
+}

@@ -89,39 +89,34 @@ export default {
     }
   },
   methods: {
-  // 得到文章列表
-  async getMessage() {
-    let { data } = await getMsg()
-    this.msgList = data.reverse()
-  },
-  async interact (msgId, num, type) {
-    num++
-    if(type == 'stars') {
-      let data = await collectMsg({ msgId, stars: num })
-      if(data.status == 200) {
-        this.$message.success('收藏成功')
-      }
-    } else if (type == 'likes') {
-        let data = await likeMsg({ msgId, likes: num })
+    // 得到文章列表
+    async getMessage() {
+      let { data } = await getMsg()
+      this.msgList = data.reverse()
+    },
+    async interact (msgId, num, type) {
+      num++
+      if(type == 'stars') {
+        let data = await collectMsg({ msgId, stars: num })
         if(data.status == 200) {
-          this.$message.success('点赞成功')
+          this.$message.success('收藏成功')
         }
-    } else if (type == 'comments') {
-      console.log('评论...')
-    }
-    this.getMessage()
-  },
-  moveItem(item) {
-    this.goalItem = item
-    // console.log(this.goalItem);
-  },
-  watchOne(msgId) {
+      } else if (type == 'likes') {
+          let data = await likeMsg({ msgId, likes: num })
+          if(data.status == 200) {
+            this.$message.success('点赞成功')
+          }
+      } else if (type == 'comments') {
+        console.log('评论...')
+      }
+      this.getMessage()
+    },
+    moveItem(item) {
+      this.goalItem = item
+      // console.log(this.goalItem);
+    },
+    watchOne(msgId) {
     this.$router.push({path: '/messageDetail', query: { msgId }})
-  },
-  loadMessage() {
-    // this.$http.get('http://127.0.0.1:3000/message').then(res => {
-      // this.message = res.body.reverse()
-    // })
   }
   },
   filters: {
