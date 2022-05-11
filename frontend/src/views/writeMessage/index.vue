@@ -53,4 +53,7 @@ components: {
 </script>
 
 <style scoped>
+#app {
+  background-color: inherit !important;
+}
 </style>

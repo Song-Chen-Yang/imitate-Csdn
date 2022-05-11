@@ -39,7 +39,7 @@
             <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
             <a-avatar slot="avatar" :src="item.userAvatar"/>
           </a-list-item-meta>
-          <a target="_blank">{{ item.msgContent | textEllipsis}}</a> <!-- 文章内容 -->
+          <a target="_blank">{{ item.msgContentText | textEllipsis}}</a> <!-- 文章内容 -->
           <!-- <template v-for="{type, text} in actions" style="user-select: none;" slot="actions">
           <span :key="type" @click.stop="interaction">
           <a-icon :type="type"></a-icon>
@@ -121,10 +121,10 @@ export default {
   },
   filters: {
     textEllipsis(val) {
-    if(val.length >= 50) {
-      return val.substring(0, 50) + '...'
-    }
-    return val
+      if(val?.length >= 50) {
+        return val.substring(0, 50) + '...'
+      }
+      return val
     }
   },
   computed: {

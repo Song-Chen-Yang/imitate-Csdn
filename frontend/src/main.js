@@ -9,6 +9,7 @@ import VueResource from 'vue-resource'
 import requests from './axios/request'
 import dayjs from 'dayjs'
 import axios from 'axios'
+import 'view-design/dist/styles/iview.css'
 
 Vue.prototype.dayjs = dayjs
 Vue.prototype.$http = requests

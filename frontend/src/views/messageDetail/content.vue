@@ -2,7 +2,7 @@
   <div id="app">
     <a-layout-content>
       <div class="title">
-        <h1>{{message.msgTitle}}</h1>
+        <h1 v-text="message.msgTitle"></h1>
       </div>
       <div class="messageInfo">
         <p><span>我希望</span><span>{{message.msgDate}}</span><span><a-icon type="eye" /> 5554</span><span><a-icon type="star" theme="filled" /> 收藏{{message.stars}}</span></p>
@@ -11,22 +11,26 @@
       </div>
       <div class="includes">
         <span>
-        <img src="@/assets/img/mianshizhili.png" alt="">
-        <h3>面试智力题</h3>专栏收录该内容</span>
-        <span>
-        <label for="">2订阅</label>
-        <label for="">14篇文章</label>
-        <span style="padding: 4px 8px;border: 1px solid #eee;border-radius: 14px;font-size: .5rem;cursor: pointer;user-select: none;">订阅专栏</span>
+          <img src="@/assets/img/mianshizhili.png" alt="">
+          <h3>面试智力题</h3>专栏收录该内容
+        </span>
+        <span class="pub">
+          <label for="">2订阅</label>
+          <label for="">14篇文章</label>
+          <span>订阅专栏</span>
         </span>
       </div>
-      <div>
-        <h3>{{message.msgContent}}</h3>
+      <div class="ql-container ql-snow">
+        <div class="content ql-editor" v-html="message.msgContent"></div>
       </div>
     </a-layout-content>
   </div>
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 
 export default {
   props:[
@@ -106,6 +110,16 @@ export default {
     img {
       width: 30px;
       height: 30px;
+    }
+  }
+  .pub {
+    span {
+      padding: 4px 8px;
+      border: 1px solid #eee;
+      border-radius: 14px;
+      font-size: .5rem;
+      cursor: pointer;
+      user-select: none;
     }
   }
 }

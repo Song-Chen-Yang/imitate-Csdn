@@ -29,6 +29,10 @@ var messageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  msgContentText: {
+    type: String,
+    required: true
+  },
   msgDate: {
     type: String,
     required: true

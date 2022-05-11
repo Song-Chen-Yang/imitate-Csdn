@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const path = require('path')
 var cors = require('cors')
 const router = require('./router')
+
+
 const bodyParser = require('body-parser')
 const port = process.env.PORT || 5000
 
@@ -32,6 +34,10 @@ app.set('src', path.join(__dirname, './blog-vue/src/')) // 默认设置res.rende
 app.use(cors())
 
 app.use(router)
+
+
+
+
 
 app.listen(port, () => {
     console.log(`server running in ${port}...`)
