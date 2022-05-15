@@ -11,12 +11,13 @@ import dayjs from 'dayjs'
 import axios from 'axios'
 import 'view-design/dist/styles/iview.css'
 
+Vue.config.productionTip = false
+
 Vue.prototype.dayjs = dayjs
 Vue.prototype.$http = requests
 Vue.prototype.$axios = axios
 Vue.prototype.$bus = new Vue()
 
-Vue.config.productionTip = false
 Vue.use(VueResource)
 Vue.use(animated)
 Vue.use(Antd)

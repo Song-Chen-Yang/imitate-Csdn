@@ -34,7 +34,7 @@
     </div>
     <!--  文章列表 -->
     <a-list item-layout="vertical" size="large" :data-source="msgList">
-        <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.msgId)">
+        <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.userId, item.msgId)">
           <a-list-item-meta>
             <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
             <a-avatar slot="avatar" :src="item.userAvatar"/>
@@ -97,6 +97,7 @@ export default {
     async interact (msgId, num, type) {
       num++
       if(type == 'stars') {
+      console.log(msgId);
         let data = await collectMsg({ msgId, stars: num })
         if(data.status == 200) {
           this.$message.success('收藏成功')
@@ -115,9 +116,9 @@ export default {
       this.goalItem = item
       // console.log(this.goalItem);
     },
-    watchOne(msgId) {
-    this.$router.push({path: '/messageDetail', query: { msgId }})
-  }
+    watchOne(uuid, msgId) {
+      this.$router.push({path: '/messageDetail', query: { user_id: uuid, msg_Id: msgId }})
+    }
   },
   filters: {
     textEllipsis(val) {

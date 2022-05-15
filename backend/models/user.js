@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 // var { v4: uuidv4 } = require('uuid')
-var { nanoid } = require('nanoid')
 var moment = require('moment')
 var Schema = mongoose.Schema
 
@@ -9,8 +8,7 @@ var Schema = mongoose.Schema
 var userSchema = new Schema({
   uuid: {
     type: String,
-    rquired: true,
-    default: nanoid()
+    default: ''
   },
   email: {
     type: String,

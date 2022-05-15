@@ -23,6 +23,13 @@
       <div class="ql-container ql-snow">
         <div class="content ql-editor" v-html="message.msgContent"></div>
       </div>
+      <!-- 作者互动 -->
+      <!-- <div class="bottom_toolBar">
+        <div class="avatar">
+          <img src="" alt="">
+        </div>
+        <div></div>
+      </div> -->
     </a-layout-content>
   </div>
 </template>
@@ -31,11 +38,26 @@
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import { getMsgById } from '@/axios/api/message'
 
 export default {
-  props:[
-    'message'
-  ]
+  data() {
+    return {
+      message: {}
+    }
+  },
+  created() {
+    this.getMsg()
+  },
+  methods: {
+    async getMsg() {
+      const msgId = this.$route.query.msg_Id
+      let { data } = await getMsgById({ msgId })
+      if(data) {
+        this.message = data[0]
+      }
+    }
+  }
 }
 </script>
 
@@ -48,10 +70,15 @@ export default {
   flex-flow: column;
   padding: 15px;
   font-family: '微软雅黑';
+  background-color: #fff;
+}
+.ql-container {
+  border: 0;
 }
 .title h1 {
   font-size: 1.7rem;
   font-weight: 800;
+  text-indent: 4px;
 }
 .messageInfo {
   width: 100%;

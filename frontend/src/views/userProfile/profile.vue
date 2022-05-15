@@ -3,7 +3,8 @@
     <h2><b>基本信息</b></h2>
     <a-divider style="margin: 0;"></a-divider>
     <div class="avatar">
-      <a-avatar :size="96" icon="user" :src="currentUser.avater" />
+      <a-avatar v-if="isDefault" :size="96" icon="user" src="@/assets/img/avatar.jpg" />
+      <a-avatar v-if="!isDefault" :size="96" icon="user" :src="currentUser.avater" />
       <a-upload
         name="file"
         @change="handleChange"
@@ -69,76 +70,76 @@
     <h2><b>教育信息</b></h2>
     <a-divider style="margin: 0;"></a-divider>
     <div class="edu_form" v-show="!edu_edit_status" @click="editEdu">
-    <a-form :form="form" style="display: block;" :label-col="{ span: 8 }" :wrapper-col="{ span: 8 }" labelAlign="left">
-      <a-form-item label="学校名称">
-      <b>{{ EduInfo.schoolVal || '未选择' }}</b>
-      </a-form-item>
-      <a-form-item label="专业">
-      <b>{{ EduInfo.majorVal || '未选择' }}</b>
-      </a-form-item>
-      <a-form-item label="入学时间">
-      <!-- <b>{{ grduaDate[0] || '未选择' | dateFilters }}-{{ grduaDate[1] || '' | dateFilters }}</b> -->
-      <b>{{ EduInfo.grduaDate ? EduInfo.grduaDate._i : '未选择' }}</b>
-      </a-form-item>
-      <a-form-item label="学历">
-      <b>{{ EduInfo.xueli || '未选择' }}</b>
-      </a-form-item>
-    </a-form>
-    <span class="edit" @click="editEdu"><a-icon type="edit"/>编辑</span>
+      <a-form :form="form" style="display: block;" :label-col="{ span: 8 }" :wrapper-col="{ span: 8 }" labelAlign="left">
+        <a-form-item label="学校名称">
+        <b>{{ EduInfo.schoolVal || '未选择' }}</b>
+        </a-form-item>
+        <a-form-item label="专业">
+        <b>{{ EduInfo.majorVal || '未选择' }}</b>
+        </a-form-item>
+        <a-form-item label="入学时间">
+        <!-- <b>{{ grduaDate[0] || '未选择' | dateFilters }}-{{ grduaDate[1] || '' | dateFilters }}</b> -->
+        <b>{{ EduInfo.grduaDate ? EduInfo.grduaDate._i : '未选择' }}</b>
+        </a-form-item>
+        <a-form-item label="学历">
+        <b>{{ EduInfo.xueli || '未选择' }}</b>
+        </a-form-item>
+      </a-form>
+      <span class="edit" @click="editEdu"><a-icon type="edit"/>编辑</span>
     </div>
     <div class="edu_form" v-show="edu_edit_status">
     <a-form :form="form">
-    <a-form-item label="学校名称">
-    <!-- <a-auto-complete
-      v-model="EduInfo.schoolVal"
-      :data-source="school"
-      style="width: 400px;font-size: 1rem;"
-      placeholder="请填写 例如:北京大学"
-      :filter-option="dataSearch"
-    > -->
-    <a-auto-complete
-      v-model="EduInfo.schoolVal"
-      style="width: 400px;font-size: 1rem;"
-      placeholder="请填写 例如:北京大学"
-    >
-    </a-auto-complete>
-    </a-form-item>
-    <a-form-item label="专业">
+      <a-form-item label="学校名称">
+      <!-- <a-auto-complete
+        v-model="EduInfo.schoolVal"
+        :data-source="school"
+        style="width: 400px;font-size: 1rem;"
+        placeholder="请填写 例如:北京大学"
+        :filter-option="dataSearch"
+      > -->
       <a-auto-complete
-      v-model="EduInfo.majorVal"
-      style="width: 400px;font-size: 1rem;"
-      placeholder="请填写 例如:计算机科学与技术"
-    />
-    </a-form-item>
-    <a-form-item label="入学时间">
-    <a-month-picker
-      style="visibility: visible;width: 400px;float: left;font-size: 1rem;margin-top: 4px;"
-      size="default"
-      :value="EduInfo.grduaDate"
-      @change="grduaDateChoose"
-      placeholder="Select Month"
-      format="YYYY-MM" />
-    <!-- <a-range-picker
-        style="visibility: visible;width: 400px;float: left;font-size: 1rem;"
-        :placeholder="['请选择入学时间', '请选择毕业时间']"
-        format="YYYY-MM"
-        :value="EduInfo.grduaDate"
-        :mode="['month', 'month']"
-        @panelChange="handlePanelChange2"
+        v-model="EduInfo.schoolVal"
+        style="width: 400px;font-size: 1rem;"
+        placeholder="请填写 例如:北京大学"
       >
-      </a-range-picker> -->
-    </a-form-item>
-    <a-form-item label="学历">
-    <a-select placeholder="请选择" style="width: 400px" :value="EduInfo.xueli" @change="eduChoose">
-        <a-select-option v-for="item in education" :key="item">
-        {{ item }}
-        </a-select-option>
-      </a-select>
-    </a-form-item>
-    <a-form-item style="text-align: center;">
-    <a-button type="danger" ghost style="margin: 0 10px;" @click="() => this.edu_edit_status = !this.edu_edit_status">取消</a-button>
-    <a-button type="primary" @click="eduEditOk">确定</a-button>
-    </a-form-item>
+      </a-auto-complete>
+      </a-form-item>
+      <a-form-item label="专业">
+        <a-auto-complete
+        v-model="EduInfo.majorVal"
+        style="width: 400px;font-size: 1rem;"
+        placeholder="请填写 例如:计算机科学与技术"
+      />
+      </a-form-item>
+      <a-form-item label="入学时间">
+      <a-month-picker
+        style="visibility: visible;width: 400px;float: left;font-size: 1rem;margin-top: 4px;"
+        size="default"
+        :value="EduInfo.grduaDate"
+        @change="grduaDateChoose"
+        placeholder="Select Month"
+        format="YYYY-MM" />
+      <!-- <a-range-picker
+          style="visibility: visible;width: 400px;float: left;font-size: 1rem;"
+          :placeholder="['请选择入学时间', '请选择毕业时间']"
+          format="YYYY-MM"
+          :value="EduInfo.grduaDate"
+          :mode="['month', 'month']"
+          @panelChange="handlePanelChange2"
+        >
+        </a-range-picker> -->
+      </a-form-item>
+      <a-form-item label="学历">
+      <a-select placeholder="请选择" style="width: 400px" :value="EduInfo.xueli" @change="eduChoose">
+          <a-select-option v-for="item in education" :key="item">
+          {{ item }}
+          </a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item style="text-align: center;">
+      <a-button type="danger" ghost style="margin: 0 10px;" @click="() => this.edu_edit_status = !this.edu_edit_status">取消</a-button>
+      <a-button type="primary" @click="eduEditOk">确定</a-button>
+      </a-form-item>
     </a-form>
     </div>
   </div>
@@ -161,6 +162,7 @@ export default {
   data () {
     return {
       currentUser:{},
+      isDefault: true,
       form: this.$form.createForm(this, { name: 'coordinated' }),
       formLayout: 'horizontal',
       editstatus: { // 个人信息显示状态
@@ -197,6 +199,9 @@ export default {
       if(data.educationInfo) {
         this.EduInfo = data.educationInfo
         this.EduInfo.grduaDate = moment(this.EduInfo.grduaDate)
+      }
+      if(this.currentUser.avater.search('base64') != '-1') {
+        this.isDefault = false
       }
       // this.EduInfo.grduaDate = this.EduInfo.grduaDate.split('-').map(item => item.replace(/\//g, '-'))
     },
@@ -260,16 +265,19 @@ export default {
           // console.log(info.file, info.fileList)
           let fileBase64 = await this.getBase64(info.file.originFileObj)
           let data = await uploadAvatar({ uuid, avater: fileBase64 })
+          console.log(data);
           if(data.status == 200) {
             this.$message.success('头像上传成功~')
             this.getCurrentUser()
+            this.$bus.$emit('upload', true)
           }
         }
         if (info.file.status === 'done') {
           this.$message.success(`${info.file.name} file uploaded successfully`)
-        } else if (info.file.status === 'error') {
-          this.$message.error(`${info.file.name} file upload failed.`)
         }
+        //  else if (info.file.status === 'error') {
+        //   this.$message.error(`${info.file.name} file upload failed.`)
+        // }
       },
     // 生日
     dateOnChange(time, timeString) {
@@ -312,7 +320,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .ant-input {
   width: 260px;
 }
@@ -386,7 +394,7 @@ form {
   left: 0;
   top: 0;
   padding-top: 28px;
-  background: rgb(91, 91, 89, .4);
+  background: rgba(138, 138, 137, 0.205);
   width: 100px;
   height: 100px;
 }

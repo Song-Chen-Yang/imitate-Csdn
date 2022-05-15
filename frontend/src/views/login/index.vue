@@ -124,13 +124,15 @@ export default {
     return {
       status: 2, // 登录注册表单的显示状态
       loginForm: {
-        username: "waynesong",
-        password: "waynesong",
+        // username: "waynesong",
+        // password: "waynesong",
+        username: "",
+        password: "",
       },
       regForm: {
-        username: "waynesong",
-        password: "waynesong",
-        email: "waynesong@qq.com",
+        username: "",
+        password: "",
+        email: "",
       },
       emailErrVisible: false,
     };
@@ -155,7 +157,7 @@ export default {
       }
       this.$message.success('登录成功!')
       this.$store.dispatch('acLogin', res.data.data)
-      localStorage.setItem('token', res.data.token)
+      // localStorage.setItem('token', res.data.token)
       localStorage.setItem('uuid', res.data.data.uuid)
       this.$router.push({path: '/index'})
     },
@@ -185,10 +187,11 @@ export default {
       }
       this.regForm.password = this.setMd5(this.regForm.password)
       let data = await register(this.regForm)
-      this.$message.success('注册成功，即将自动登录')
-      localStorage.setItem('uuid', res.data.data.uuid)
+      this.$message.success('注册成功，跳转登录页面~')
+      // localStorage.setItem('uuid', res.data.data.uuid)
       setTimeout(() => {
-        this.$router.push({path: '/index'})
+        // this.$router.push({path: '/index'})
+        this.toLogin()
       }, 1500)
     },
     // 去注册按钮

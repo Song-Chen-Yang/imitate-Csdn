@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 // var { v4: uuidv4 } = require('uuid')
-var { nanoid } = require('nanoid')
+
 var Schema = mongoose.Schema
 
 var messageSchema = new mongoose.Schema({
@@ -18,8 +18,7 @@ var messageSchema = new mongoose.Schema({
   },
   msgId: {
     type: String,
-    required: true,
-    default: nanoid()
+    default: ''
   },
   msgTitle: {
     type: String,

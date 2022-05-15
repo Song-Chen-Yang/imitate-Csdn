@@ -167,7 +167,7 @@ methods: {
   async getSelfMsg() {
     let userId = this.$store.state.useruuid
     let { data } = await getSelfMsg({ userId })
-    this.msgList = data
+    this.msgList = data.reverse()
   },
   onSelectChange(selectedRowKeys, selectedRows) {
     console.log(selectedRowKeys, selectedRows)

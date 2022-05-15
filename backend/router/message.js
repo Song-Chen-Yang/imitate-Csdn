@@ -3,6 +3,7 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const path = require('path')
 const fs = require('fs')
+var { nanoid } = require('nanoid')
 let multer = require('multer')
 var app = express();
 var msgSchema = mongoose.model('message')
@@ -13,7 +14,6 @@ router.post('/saveMsg', async (req, res) => {
     userId,
     username,
     userAvatar,
-    msgId,
     msgTitle,
     msgContent,
     msgContentText,
@@ -23,7 +23,7 @@ router.post('/saveMsg', async (req, res) => {
     userId,
     username,
     userAvatar,
-    msgId,
+    msgId: nanoid(),
     msgTitle,
     msgContent,
     msgContentText,

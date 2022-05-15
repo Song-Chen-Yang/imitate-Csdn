@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { message } from 'ant-design-vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
@@ -89,7 +90,14 @@ const router = new VueRouter({
     if (to.meta.title) {
       document.title = to.meta.title;
     }
-    next();
+
+    const uuid = localStorage.getItem('uuid')
+    if(to.name !== 'login' && !uuid) {
+      next({ path: '/login' })
+      message.info('请先登录~')
+    } else {
+      next();
+    }
   });
 
 

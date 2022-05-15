@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+var { nanoid } = require('nanoid')
 const jwt = require('jsonwebtoken')
 var app = express();
 var userSchema = mongoose.model('user')
+var msgSchema = mongoose.model('message')
 
 let secret = 'song'
 
@@ -58,6 +60,7 @@ router.post('/register', async (req, res) => {
 	// //#endregion
 	const { username, password, email } = req.body
 	let data = await new userSchema({
+		uuid: nanoid(),
 		username,
 		password,
 		email
@@ -68,11 +71,12 @@ router.post('/register', async (req, res) => {
 // 修改头像
 router.post('/uploadAvatar', async (req, res) => {
 	const { uuid, avater } = req.body
-	let data = await userSchema.updateOne({ uuid }, { $set: { avater }})
-	if(!data) {
-		res.send(data, '上传失败')
+	let userData = await userSchema.updateOne({ uuid }, { $set: { avater }})
+	let msgData = await msgSchema.updateMany({ userId: uuid }, { $set: { userAvatar: avater }})
+	if(!userData || !msgData) {
+		res.send(userData, '上传失败')
 	}
-	res.send(data)
+	res.send(userData)
 })
 
 // 修改用户名

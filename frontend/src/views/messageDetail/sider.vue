@@ -3,10 +3,17 @@
     <a-layout-sider width="21vw">
       <div class="main_content back">
         <div class="user_info">
-          <img src="@/assets/img/logo.jpg" alt="">
+          <img v-if="isDefault" src="@/assets/img/logo.jpg" alt="">
+          <img v-if="!isDefault" :src="user.avater" alt="">
           <div class="user_info_bio">
           <p>{{user.username}}</p>
-          <p><span>码龄1年</span><span><img src="@/assets/img/colleges.png" alt="">河南开封科技传媒学院</span></p>
+          <p>
+            <span>码龄1年</span>
+            <span>
+            <img src="@/assets/img/colleges.png" alt="">
+            {{user.educationInfo ? user.educationInfo.schoolVal : ''}}
+            </span>
+          </p>
           </div>
         </div>
         <div class="user_honor">
@@ -143,19 +150,23 @@
 </template>
 
 <script>
-import { getSelfMsg } from '@/axios/api/message'
+import { getUser } from '@/axios/api/user'
 export default {
   data () {
     return {
       visible: false,
-      user: {}
+      user: {},
+      isDefault: true
     }
   },
   methods: {
     async getUserInfo() {
-      let userId = this.$store.state.useruuid
-      let { data } = await getSelfMsg({ userId })
-      this.user = data[0]
+      let uuid = this.$route.query.user_id
+      let { data } = await getUser({ uuid })
+      this.user = data
+      if(this.user.avater.search('base64') != '-1') {
+        this.isDefault = false
+      }
     },
     rateClick (e) {
       let imgs = this.$refs.imgs.childNodes
@@ -231,7 +242,9 @@ ul {
   align-items: center;
   &>img {
     border-radius: 50%;
-    width: 45px;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
     margin: 5px 5px;
   }
   .user_info_bio p {

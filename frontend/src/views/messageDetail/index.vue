@@ -4,7 +4,7 @@
       <Header></Header>
       <a-layout class="main_content">
         <Sider class="sider"></Sider>
-        <Content class="content" :message="message[0]"></Content>
+        <Content class="content" :message="message"></Content>
       </a-layout>
       <Footer></Footer>
     </a-layout>
@@ -32,7 +32,7 @@ export default {
     async getMsg() {
       const { msgId } = this.$route.query
       let { data } = await getMsgById({ msgId })
-      this.message = data
+      this.message = data[0]
     }
   },
   created() {

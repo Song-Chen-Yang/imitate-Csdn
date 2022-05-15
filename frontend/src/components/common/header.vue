@@ -36,73 +36,104 @@
           <!-- 登陆成功的显示 -->
           <span class="avatar" v-if="currentUser">
               <!-- <span>{{currentUser.currentUsername}}</span> -->
-              <a-space size="small">
-            <span>
+            <a-space size="small">
+              <span>
+                <a-dropdown>
+                  <a-badge :count="99">
+                    <span v-if="isDefault">
+                      <!-- <img src="@/assets/img/avatar.jpg" alt=""> -->
+                      <a-avatar :size="36" icon="user"/>
+                    </span>
+                    <span v-if="!isDefault">
+                      <img :src="currentUser.avater" alt="">
+                    </span>
+                  </a-badge>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" class="messageList">
+                      <router-link to="/index/profile/userProfile">
+                        个人资料
+                      </router-link>
+                    </a-menu-item>
+                    <a-menu-item key="2" class="messageList">
+                      <router-link to="/index/profile/message">
+                        文章管理
+                      </router-link>
+                    </a-menu-item>
+                    <a-menu-item key="3" @click="exit" class="messageList">
+                      退出
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </span>
+              <span><a @click="e => e.preventDefault()">会员中心<a-icon type="crown" theme="twoTone" twoToneColor="#f1c40f" /></a></span>
+              <span>
+                <a-dropdown>
+                  <a @click="e => e.preventDefault()">足迹</a>
+                  <a-menu slot="overlay" class="foot_dropdown">
+                    <a-menu-item key="1" class="messageList">
+                      评论
+                    </a-menu-item>
+                    <a-menu-item key="2" class="messageList">
+                      关注
+                    </a-menu-item>
+                    <a-menu-item key="3" class="messageList">
+                      点赞
+                    </a-menu-item>
+                    <a-menu-item key="4" class="messageList">
+                      私信
+                    </a-menu-item>
+                    <a-menu-item key="5" class="messageList">
+                      系统通知
+                    </a-menu-item>
+                    <a-menu-item key="6" class="messageList">
+                      消息设置
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </span>
+              <span><a @click="e => e.preventDefault()">动态</a></span>
               <a-dropdown>
-                <a-badge :count="1">
-                <img v-if="isDefault" src="@/assets/img/avatar.jpg" alt="">
-                <img v-else :src="currentUser.avater" alt=""></a-badge>
-                <a-menu slot="overlay" style="margin-top:8px;">
+                <a @click="e => e.preventDefault()">消息</a>
+                <a-menu slot="overlay">
                   <a-menu-item key="1" class="messageList">
-                    <router-link to="/index/profile/userProfile">
-                      个人资料
-                    </router-link>
+                    评论
                   </a-menu-item>
                   <a-menu-item key="2" class="messageList">
-                    <router-link to="/index/profile/message">
-                      文章管理
-                    </router-link>
+                    关注
                   </a-menu-item>
-                  <a-menu-item key="3" @click="exit" class="messageList">
-                    退出
+                  <a-menu-item key="3" class="messageList">
+                    点赞
+                  </a-menu-item>
+                  <a-menu-item key="4" class="messageList">
+                    私信
+                  </a-menu-item>
+                  <a-menu-item key="5" class="messageList">
+                    系统通知
+                  </a-menu-item>
+                  <a-menu-item key="6" class="messageList">
+                    消息设置
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
-            </span>
-            <span><a @click="e => e.preventDefault()">会员中心<a-icon type="crown" theme="twoTone" twoToneColor="#f1c40f" /></a></span>
-            <span><a @click="e => e.preventDefault()">收藏</a></span>
-            <span><a @click="e => e.preventDefault()">动态</a></span>
-            <a-dropdown>
-              <a @click="e => e.preventDefault()">消息</a>
-              <a-menu slot="overlay" style="margin-top:18px;">
-                <a-menu-item key="1" class="messageList">
-                  评论
-                </a-menu-item>
-                <a-menu-item key="2" class="messageList">
-                  关注
-                </a-menu-item>
-                <a-menu-item key="3" class="messageList">
-                  点赞
-                </a-menu-item>
-                <a-menu-item key="4" class="messageList">
-                  私信
-                </a-menu-item>
-                <a-menu-item key="5" class="messageList">
-                  系统通知
-                </a-menu-item>
-                <a-menu-item key="6" class="messageList">
-                  消息设置
-                </a-menu-item>
-              </a-menu>
-            </a-dropdown>
-            <span class="create" @mouseenter="enterCreate" @mouseleave="moveCreate"><a-icon type="edit" />&nbsp;创作&nbsp;<a-icon type="caret-down" />
-            <div class="create_type" v-show="writeStatus">
-            <ul>
-              <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/writeMessage.png" alt="">写文章</li>
-              <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/blink.png" alt="">发Blink</li>
-              <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/question.png" alt="">提问题</li>
-              <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/upload.png" alt="">传资源</li>
-              <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/profile.png" alt="">建项目</li>
-            </ul>
-            <!-- <a-divider></a-divider> -->
-            <!-- <div class="more">
-              <p><h4>创作活动</h4><a @click="e => e.preventDefault()">更多</a></p>
-              <span>#CSDN博主粉丝社区来袭！</span>
-              <span>#新星计划第二季｜量身打造、全新互动，快来报名！</span>
-            </div> -->
-            </div>
-            </span>
-              </a-space>
+              <div :style="{ display: 'inline-block', width: `${buttonWidth}px`}">
+              </div>
+                <a-popover placement="bottomRight" arrow-point-at-center>
+                  <span class="create">
+                    <a-icon type="edit" />&nbsp;创作&nbsp;<a-icon type="caret-down" />
+                  </span>
+                  <template #content>
+                    <div class="create_type">
+                      <ul>
+                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/writeMessage.png" alt="">写文章</li>
+                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/blink.png" alt="">发Blink</li>
+                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/question.png" alt="">提问题</li>
+                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/upload.png" alt="">传资源</li>
+                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/profile.png" alt="">建项目</li>
+                      </ul>
+                    </div>
+                  </template>
+                </a-popover>
+            </a-space>
           </span>
           <!-- 未登录状态的显示 -->
           <span  v-else>
@@ -118,7 +149,6 @@
 import {
   getUser
 } from '@/axios/api/user'
-import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
   inject:['reload'],
   name: 'Header',
@@ -128,17 +158,19 @@ export default {
       menu: ['博客', '专栏课程', '问答', '社区', '下载', '插件'],
       current: ['博客'],
       scrollTop: '',
-      writeStatus: false,
-      isDefault: false // 是否默认头像
+      // writeStatus: false,
+      buttonWidth: 20,
+      isDefault: true // 是否默认头像
     }
   },
   methods: {
     async getCurrentUser() {
-      let uuid  = this.$store.state.useruuid
+      let uuid = this.$store.state.useruuid
+      console.log(uuid);
       let { data } = await getUser({ uuid })
       this.currentUser = data
-      if(this.currentUser.avater.search('base64') == '-1') {
-        this.isDefault = true
+      if(data.avater.search('base64') != '-1') {
+        this.isDefault = false
       }
     },
     onfocus() { // 搜索框聚焦
@@ -160,12 +192,6 @@ export default {
     menuChange (item) { // 菜单选择
       this.current[0] = item
     },
-    enterCreate () { // 鼠标创作前
-    this.writeStatus = true
-    },
-    moveCreate () { // 鼠标创作时
-    this.writeStatus = false
-    },
     createTo (url) {
       this.$router.push({ path: url })
     },
@@ -174,6 +200,7 @@ export default {
     },
     exit() {
       delete localStorage['currentUser']
+      // delete localStorage['uuid']
       this.$message.success('已退出')
       this.reload()
       this.$router.push({path: '/login'})
@@ -181,6 +208,11 @@ export default {
   },
   mounted () {
    window.addEventListener('scroll', this.scroll)
+   this.$bus.$on('upload', data => {
+    if(data) {
+      this.getCurrentUser()
+    }
+   })
   },
   created() {
     this.getCurrentUser()
@@ -232,7 +264,9 @@ a {
   margin-left: -20px;
   img {
     width: 35px;
+    height: 35px;
     border-radius: 35px;
+    object-fit: cover;
   }
 }
 
@@ -276,6 +310,10 @@ span>a {
   z-index: 999;
 }
 
+.foot_dropdown {
+  background-color: turquoise !important;
+}
+
 .messageList {
   padding: 5px 25px;
 }
@@ -291,52 +329,26 @@ span>a {
   &:hover {
     background-color: rgb(252, 25, 68);
   }
-  .create_type {
-    position: absolute;
-    white-space: normal;
-    right: -10px;
-    top: 46px;
-    width: 400px;
-    /* overflow: hidden; */
-    color: #000;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 1px 1px 3px rgb(211, 209, 209),
-    -1px -1px 3px rgb(211, 209, 209);
-    z-index: 999;
-    &::after {
-      content: '';
-      display: block;
-      position: absolute;
-      right: 45px;
-      top: -11px;
-      filter: blur(.7px);
-      border-right: 10px solid transparent;
-      border-bottom: 10px solid #dfe6e9;
-      border-left: 10px solid transparent;
-      z-index: 1000;
-    }
-    ul {
-      list-style: none;
-      display: flex;
-      width: 400px;
-      padding: 10px;
-      justify-content: space-evenly;
-    }
-    ul li {
+}
+.create_type {
+  width: 350px;
+  ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+    li {
       display: flex;
       flex-direction: column;
-      width: 45px;
-      height: 45px;
-
+      width: 35px;
+      text-align: center;
+      white-space: nowrap;
       align-items: space-between;
-      /* background-color: red; */
       img {
-        margin-bottom: -15px;
-        padding: 6px;
         background-color: #ecf0f1;
         border-radius: 40px;
-        /* margin: 0; */
+        margin: 2px 0;
+        padding: 2px;
+        opacity: .8;
         transition: transform .3s ease-in-out 0s;
         &:hover {
           transform: scale(1.2);

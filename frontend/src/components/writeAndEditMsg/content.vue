@@ -1,31 +1,6 @@
 <template>
   <div class="" id="app">
     <a-layout-content>
-    <!-- <div class="tools">
-    <ul>
-      <li><a-icon style="transform: rotate(90deg);" type="undo" /><p>撤销</p></li>
-      <li><a-icon style="transform: rotate(-90deg);" type="redo" /><p>重做</p></li>
-      <li><a-icon type="highlight" /><p>笔刷</p></li>
-      <li><a-icon type="font-size" /><p>字号</p></li>
-      <li><a-icon type="font-colors" /><p>颜色</p></li>
-      <li><a-icon type="bold" /><p>加粗</p></li>
-      <li><a-icon type="italic" /><p>斜体</p></li>
-      <li><a-icon type="underline" /><p>下划线</p></li>
-      <li><a-icon type="strikethrough" /><p>删除线</p></li>
-      <li><a-icon type="line-height" /><p>行高</p></li>
-      <li><a-icon type="sort-ascending" /><p>正序</p></li>
-      <li><a-icon type="sort-descending" /><p>倒序</p></li>
-      <li><a-icon type="align-left" /><p>左对齐</p></li>
-      <li><a-icon type="align-center" /><p>居中</p></li>
-      <li><a-icon type="align-right" /><p>右对齐</p></li>
-      <li><a-icon type="bg-colors" /><p>背景颜色</p></li>
-      <li><a-icon type="ordered-list" /><p>数字排序</p></li>
-      <li><a-icon type="unordered-list" /><p>默认排序</p></li>
-      <li><a-icon type="radius-setting" /><p>圆角</p></li>
-      <li></li>
-    </ul>
-    </div> -->
-    <!-- <a-divider></a-divider> -->
       <div class="edit-content">
         <div class="title">
           <label for="title">标题:</label>
@@ -34,9 +9,6 @@
             <span>{{editMsg.msgTitle | titleLen}}</span>
           </div>
         </div>
-        <!-- <div class="textarea">
-          <div class="editable" ref="richedit" placeholder="请输入文章内容" contenteditable></div>
-        </div> -->
       <Upload
         id="iviewUp"
         :show-upload-list="false"
@@ -52,9 +24,19 @@
         <div class="content">
           <label for="content">内容:</label>
           <quill-editor
+            v-if="!isEdit"
             class="editor"
             ref="myQuillEditor"
             :options="editorOption"
+            placeholder="请输入公告内容"
+            @change="onEditorChange($event)"
+          />
+          <quill-editor
+            v-else
+            class="editor"
+            ref="myQuillEditor"
+            :options="editorOption"
+            v-model="editMsg.msgContent"
             placeholder="请输入公告内容"
             @change="onEditorChange($event)"
           />
@@ -96,6 +78,7 @@ export default {
   data () {
     const toolbarOptions = [
       ["bold", "italic", "underline", "strike"], // 加粗 斜体 下划线 删除线
+      [{ align: [] }], // 对齐方式
       ["blockquote", "code-block"], // 引用  代码块
       [{ header: 1 }, { header: 2 }], // 1、2 级标题
       [{ list: "ordered" }, { list: "bullet" }], // 有序、无序列表
@@ -108,7 +91,6 @@ export default {
       [{ color: [] },{ background: [] } ], // 字体颜色、字体背景颜色
       // [{ font: [false, 'SimSun', 'SimHei', 'Microsoft-YaHei', 'KaiTi', 'FangSong', 'Arial', 'sans-serif'] }], // 字体种类
       [{ font: [] }], // 字体
-      [{ align: [] }], // 对齐方式
       ["clean"], // 清除文本格式
       ["image"] // 链接、图片、视频
     ]
@@ -142,7 +124,7 @@ export default {
           }
         },
         imageResize: {}, // 自定义拉伸
-        placeholder: '请输入公告内容'
+        placeholder: '请输入文章内容'
       }
     }
   },
@@ -154,7 +136,6 @@ export default {
           let data = await getMsgById({ msgId })
           if(data) {
             this.editMsg = data.data[0]
-            this.$refs.richedit.innerText = this.editMsg.msgContent
           }
         }
       },
@@ -164,6 +145,9 @@ export default {
   methods: {
     // 发布文章
     async bunch() {
+      this.editMsg.userId = this.currentUser.uuid
+      this.editMsg.username = this.currentUser.username
+      this.editMsg.userAvatar = this.currentUser.avater
       let data = await saveMsg(this.editMsg)
       if(data.status == 200) {
         this.$message.success('发布成功~')
@@ -173,7 +157,7 @@ export default {
     // 编辑文章
     async editFinsh() {
       const msgId = this.$route.query.msgId
-      this.editMsg.msgContent = this.$refs.richedit.innerText
+      // this.editMsg.msgContent = this.$refs.richedit.innerText
       let data = await updateMsg({ msgId, ...this.editMsg })
       if(data) {
         this.$message.success('更新完成！')
@@ -214,35 +198,20 @@ export default {
       return val.length >= 5 ? val.length +'/40' : '还需输入'+(5-val.length)+'个字'
     }
   },
+  mounted() {
+    console.log(document.getElementsByClassName('editor'));
+  }
 }
 </script>
 
-<style lang="less" scoped>
-.tools {
-  width: 100%;
-  height: 40px;
-  padding: 5px 0;
-  background-color: inherit;
-  ul {
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    li {
-      text-align: center;
-      margin: 0 5px;
-      font-size: 1.1rem;
-      padding: 0 5px;
-      cursor: pointer;
-      p {
-        font-size: .8rem;
-        white-space: nowrap;
-      }
-      &:hover {
-        background-color: rgb(211, 211, 211);
-      }
-    }
+<style lang="less">
+.quill-editor {
+  height: 100% !important;
+  .ql-toolbar {
+    white-space: pre-wrap;
+  }
+  .ql-editor {
+    min-height: 400px;
   }
 }
 .ant-divider {
@@ -256,10 +225,9 @@ export default {
   background: #fff;
   width: 80vw;
   min-height: 92.5vh;
-  margin: 0 auto;
+  margin: 0 auto 60px;
   padding: 30px 30px;
   overflow: hidden;
-  // padding: 0 5px;
 
   .title {
     margin: 10px auto;
