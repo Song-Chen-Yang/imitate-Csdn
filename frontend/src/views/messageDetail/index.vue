@@ -46,13 +46,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin: 10px 100px;
+  margin: 10px 50px;
 }
 .main_content .sider {
   flex: 2.5;
 }
 .main_content .content {
-  flex: 7.5;
-  background-color: #fff;
+  flex: 8;
 }
 </style>

@@ -115,24 +115,22 @@
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
-              <div :style="{ display: 'inline-block', width: `${buttonWidth}px`}">
-              </div>
-                <a-popover placement="bottomRight" arrow-point-at-center>
-                  <span class="create">
-                    <a-icon type="edit" />&nbsp;创作&nbsp;<a-icon type="caret-down" />
-                  </span>
-                  <template #content>
-                    <div class="create_type">
-                      <ul>
-                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/writeMessage.png" alt="">写文章</li>
-                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/blink.png" alt="">发Blink</li>
-                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/question.png" alt="">提问题</li>
-                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/upload.png" alt="">传资源</li>
-                        <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/profile.png" alt="">建项目</li>
-                      </ul>
-                    </div>
-                  </template>
-                </a-popover>
+              <a-popover placement="bottomRight" arrow-point-at-center>
+                <span class="create">
+                  <a-icon type="edit" />&nbsp;创作&nbsp;<a-icon type="caret-down" />
+                </span>
+                <template #content>
+                  <div class="create_type">
+                    <ul>
+                      <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/writeMessage.png" alt="">写文章</li>
+                      <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/blink.png" alt="">发Blink</li>
+                      <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/question.png" alt="">提问题</li>
+                      <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/upload.png" alt="">传资源</li>
+                      <li @click="createTo('/writeMessage')"><img src="@/assets/img/写文章/profile.png" alt="">建项目</li>
+                    </ul>
+                  </div>
+                </template>
+              </a-popover>
             </a-space>
           </span>
           <!-- 未登录状态的显示 -->
@@ -166,7 +164,6 @@ export default {
   methods: {
     async getCurrentUser() {
       let uuid = this.$store.state.useruuid
-      console.log(uuid);
       let { data } = await getUser({ uuid })
       this.currentUser = data
       if(data.avater.search('base64') != '-1') {

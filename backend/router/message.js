@@ -125,5 +125,20 @@ router.post('/upload', upload.single('image'), (req, res) => {
     })
 })
 
+// 评论文章
+router.post('/commentMsg', async (req, res) => {
+  const {
+    msgId,
+    userId,
+    commentContent,
+    commentDate,
+    userAvatar,
+    username
+  } = req.body
+  let data = await msgSchema.updateOne({ msgId }, { $addToSet: { comments:{ userId, commentContent, commentDate, userAvatar, username }}})
+  if(data) {
+    res.send(data)
+  }
+})
 
 module.exports = router

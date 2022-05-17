@@ -197,7 +197,6 @@ export default {
 .back {
   background-color: #fff;
   padding: 10px 10px;
-  width: 21vw;
   margin-bottom: 5px;
 }
 .ant-divider {

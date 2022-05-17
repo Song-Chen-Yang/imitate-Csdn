@@ -1,71 +1,72 @@
 <template>
   <div id="app">
     <a-layout-sider width="45vw">
-    <!--  上方广告 -->
-    <div class="advertise">
-    <img src="@/assets/img/advertisment.jpg" alt="">
-    </div>
-    <!-- 轮播图 -->
-    <div class="banner">
-    <!-- 轮播图 -->
-    <div class="banner_lb">
-      <!-- <img ref="banner" :src="changeBanner" alt=""> -->
-      <!-- <a-icon class="left_icon icon" type="left" @click="changeLeftBanner" /> -->
-      <a-carousel autoplay arrows>
-   <div slot="prevArrow" slot-scope="props" class="custom-slick-arrow" style="left: 10px;z-index: 99">
-      <a-icon type="left" />
-    </div>
-    <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px;z-index: 99">
-      <a-icon type="right" />
-    </div>
-    <div><img src="@/assets/img/0.jpg" alt=""></div>
-    <div><img src="@/assets/img/1.jpg" alt=""></div>
-    <div><img src="@/assets/img/2.jpg" alt=""></div>
-    <div><img src="@/assets/img/3.jpg" alt=""></div>
-    <div><img src="@/assets/img/4.jpg" alt=""></div>
-      </a-carousel>
-      <!-- <a-icon class="right_icon icon" type="right" @click="changeRightBanner" /> -->
-      <span class="bannerText">故宫时代</span>
-    </div>
-    <div class="banner_ri">
-  <p><img src="@/assets/img/banner2.jpg" alt=""><span class="ugul1">UGUL</span></p>
-  <p><img src="@/assets/img/banner2.jpg" alt=""><span class="ugul2">UGUL</span></p>
-    </div>
-    </div>
-    <!--  文章列表 -->
-    <a-list item-layout="vertical" size="large" :data-source="msgList">
-        <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.userId, item.msgId)">
-          <a-list-item-meta>
-            <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
-            <a-avatar slot="avatar" :src="item.userAvatar"/>
-          </a-list-item-meta>
-          <a target="_blank">{{ item.msgContentText | textEllipsis}}</a> <!-- 文章内容 -->
-          <!-- <template v-for="{type, text} in actions" style="user-select: none;" slot="actions">
-          <span :key="type" @click.stop="interaction">
-          <a-icon :type="type"></a-icon>
-          {{ item.star }}
-          </span>
-          </template> -->
-          <!-- 点赞评论 -->
-          <template slot="actions">
-            <div style="user-select: none;">
-              <span @click.stop="interact(item.msgId, item.stars, 'stars')" >
-                <a-icon class="interaction" type="star-o"/>
-                {{ item.stars }}
-              </span>
-              <span @click.stop="interact(item.msgId, item.likes, 'likes')" >
-                <a-icon class="interaction" type="like-o"/>
-                {{ item.likes }}
-              </span>
-              <span @click.stop="interact(item.msgId, 'comments')" >
-                <a-icon class="interaction" type="message"/>
-                {{ item.comments }}
-              </span>
+      <!--  上方广告 -->
+      <div class="advertise">
+        <img src="@/assets/img/advertisment.jpg" alt="">
+      </div>
+      <!-- 轮播图 -->
+      <div class="banner">
+        <!-- 轮播图 -->
+        <div class="banner_lb">
+          <!-- <img ref="banner" :src="changeBanner" alt=""> -->
+          <!-- <a-icon class="left_icon icon" type="left" @click="changeLeftBanner" /> -->
+          <a-carousel autoplay arrows>
+            <div slot="prevArrow" slot-scope="props" class="custom-slick-arrow" style="left: 10px;z-index: 99">
+              <a-icon type="left" />
             </div>
-          </template>
-        </a-list-item>
-      <div slot="footer" style="text-align: center;"><b>ant design vue</b> footer part</div>
-    </a-list>
+            <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px;z-index: 99">
+              <a-icon type="right" />
+            </div>
+            <div><img src="@/assets/img/0.jpg" alt=""></div>
+            <div><img src="@/assets/img/1.jpg" alt=""></div>
+            <div><img src="@/assets/img/2.jpg" alt=""></div>
+            <div><img src="@/assets/img/3.jpg" alt=""></div>
+            <div><img src="@/assets/img/4.jpg" alt=""></div>
+          </a-carousel>
+          <!-- <a-icon class="right_icon icon" type="right" @click="changeRightBanner" /> -->
+          <span class="bannerText">故宫时代</span>
+        </div>
+        <div class="banner_ri">
+          <p><img src="@/assets/img/banner2.jpg" alt=""><span class="ugul1">UGUL</span></p>
+          <p><img src="@/assets/img/banner2.jpg" alt=""><span class="ugul2">UGUL</span></p>
+        </div>
+      </div>
+      <!--  文章列表 -->
+      <a-list item-layout="vertical" size="large" :data-source="msgList">
+          <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.userId, item.msgId)">
+            <a-list-item-meta>
+              <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
+              <a-avatar slot="avatar" :src="item.userAvatar"/>
+            </a-list-item-meta>
+            <!-- 文章内容 -->
+            <a target="_blank">{{ item.msgContentText | textEllipsis}}</a>
+            <!-- <template v-for="{type, text} in actions" style="user-select: none;" slot="actions">
+            <span :key="type" @click.stop="interaction">
+            <a-icon :type="type"></a-icon>
+            {{ item.star }}
+            </span>
+            </template> -->
+            <!-- 点赞评论 -->
+            <template slot="actions">
+              <div style="user-select: none;">
+                <span @click.stop="interact(item.msgId, item.stars, 'stars')" >
+                  <a-icon class="interaction" type="star-o"/>
+                  {{ item.stars }}
+                </span>
+                <span @click.stop="interact(item.msgId, item.likes, 'likes')" >
+                  <a-icon class="interaction" type="like-o"/>
+                  {{ item.likes }}
+                </span>
+                <span @click.stop="interact(item.msgId, 'comments')" >
+                  <a-icon class="interaction" type="message"/>
+                  {{ item.comments.length }}
+                </span>
+              </div>
+            </template>
+          </a-list-item>
+        <div slot="footer" style="text-align: center;"><b>ant design vue</b> footer part</div>
+      </a-list>
     </a-layout-sider>
   </div>
 </template>
@@ -97,7 +98,6 @@ export default {
     async interact (msgId, num, type) {
       num++
       if(type == 'stars') {
-      console.log(msgId);
         let data = await collectMsg({ msgId, stars: num })
         if(data.status == 200) {
           this.$message.success('收藏成功')

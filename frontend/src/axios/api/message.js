@@ -70,3 +70,12 @@ export function updateMsg(data) {
     data
   })
 }
+
+// 评论文章
+export function commentMsg(data) {
+  return request({
+    url: '/commentMsg',
+    method: 'post',
+    data
+  })
+}

@@ -45,8 +45,33 @@ var messageSchema = new mongoose.Schema({
     default: 0
   },
   comments: {
-    type: Number,
-    default: 0
+    type: Array,
+    default: {
+      userId: {
+        type: String,
+        required: true
+      },
+      username: {
+        type: String,
+        required: true
+      },
+      avatar: {
+        type: String,
+        required: true
+      },
+      commentContent: {
+        type: String,
+        required: true
+      },
+      commentDate: {
+        type: String,
+        required: true
+      }
+    }
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'user'
   }
 })
 

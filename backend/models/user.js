@@ -67,6 +67,10 @@ var userSchema = new Schema({
     grduaDate: {
       type: String
     }
+  },
+  articles: {
+    type: Schema.Types.ObjectId,
+    ref: 'message'
   }
 })
 
