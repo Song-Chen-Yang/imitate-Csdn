@@ -225,7 +225,6 @@ export default {
     line-height: 7.5vh;
     font-size: .9rem;
     white-space: nowrap;
-    z-index: 99999;
   }
   .ant-btn {
     margin: 0 5px;

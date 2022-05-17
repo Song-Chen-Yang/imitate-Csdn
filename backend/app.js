@@ -1,5 +1,6 @@
 require('./models/user')
 require('./models/message')
+require('./models/comment')
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
