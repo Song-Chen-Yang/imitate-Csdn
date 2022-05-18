@@ -31,21 +31,11 @@ var commentSchema = new mongoose.Schema({
   commentReply: {
     type: Array,
     default: {
-      userId: {
-        type: String
-      },
-      username: {
-        type: String
-      },
-      userAvatar: {
-        type: String
-      },
-      replyCommentDate: {
-        type: String
-      },
-      replyCommentConent: {
-        type: String
-      }
+      userId: '',
+      username: '',
+      userAvatar: '',
+      replyCommentDate: '',
+      replyCommentConent: ''
     }
   }
 })

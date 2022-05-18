@@ -18,6 +18,7 @@ Vue.prototype.$http = requests
 Vue.prototype.$axios = axios
 Vue.prototype.$bus = new Vue()
 
+
 Vue.use(VueResource)
 Vue.use(animated)
 Vue.use(Antd)

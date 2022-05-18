@@ -29,8 +29,7 @@
       <div class="bottom_toolBar" ref="bottom_toolBar">
         <div class="avatar">
           <a-space size="small" class="space">
-          <a-avatar :src="message.userAvatar"></a-avatar>
-            <!-- <img :src="message.userAvatar" alt="" /> -->
+            <a-avatar style="width:100%" :src="message.userAvatar"></a-avatar>
             <span class="name">{{ message.username }}</span>
             <span class="concern">关注</span>
           </a-space>
@@ -87,17 +86,19 @@
         <div class="avatar">
           <a-avatar :src="currentUser.avater"></a-avatar>
         </div>
-        <div class="ipt_cmt">
-          <div class="ipt"
-            @focus="commentBtnStatus = true"
-            ref="commentText"
-            contenteditable>
-          </div>
-          <a-button v-show="!commentBtnStatus" @click="comment">评论</a-button>
-          <a-button class="btn" v-show="commentBtnStatus" @click="comment">评论</a-button>
+        <div class="ipt_btn" v-show="!commentStatus" @click.capture="clickcapture">
+          <a-input v-model="commentContent" :placeholder="placeholder"></a-input>
+          <a-button>评论</a-button>
+        </div>
+        <div v-show="commentStatus" style="width:100%;">
+          <text-area
+           :Status="commentStatus"
+           @comment="comment"
+          ></text-area>
         </div>
       </div>
       <a-divider style="margin: 8px 0;"/>
+      <!-- 一级评论 -->
       <template v-for="(item, index) in commentList">
         <a-comment v-if="item" :key="index">
           <a-avatar
@@ -109,18 +110,19 @@
             <span>{{ item.commentDate.split(' ')[0] }}</span>
           </a-tooltip>
           <a slot="author">{{ item.username }}</a>
-          <span slot="actions" key="comment-nested-reply-to" @click="reply(index)">回复</span>
-          <div v-show="replyIptPos === index" class="ipt_cmt">
-            <div class="ipt"
-              style="height: 80px;"
-              ref="replyCommentText"
-              contenteditable>
-            </div>
-            <a-button class="btn" @click="replyComment(item.commentId, index)">评论</a-button>
+          <span slot="actions" class="reply" key="comment-nested-reply-to" @click="reply(index)">回复</span>
+          <div v-show="replyIptPos === index" style="width:100%;">
+            <text-area
+              :Status="!isNaN(replyIptPos)"
+              :commentId="item.commentId"
+              :toUsername="item.username"
+              @replycomment="replyComment"
+            ></text-area>
           </div>
           <p slot="content">
             {{ item.commentContent }}
           </p>
+          <!-- 二级评论 -->
           <template v-for="(replyItem, replyIndex) in item.commentReply">
             <a-comment :key="replyIndex" v-if="replyItem.userId != ''">
               <a-avatar
@@ -129,43 +131,27 @@
                 alt="Han Solo"
               />
               <a-tooltip slot="datetime" :title="replyItem.replyCommentDate">
-                <!-- <span>{{ replyItem.replyCommentDate.split(' ')[0] }}</span> -->
+                <span>{{ replyItem.replyCommentDate.split(' ')[0] }}</span>
               </a-tooltip>
-              <a slot="author">{{replyItem.username}} 回复 {{item.username}}</a>
+              <a slot="author">{{replyItem.username.split('QAQ')[0]}} 回复 {{replyItem.username.split('QAQ')[1]}}</a>
               <p slot="content">
                {{replyItem.replyCommentContent}}
               </p>
-              <span slot="actions">回复</span>
-              <!-- <a-comment>
-                <a-avatar
-                  slot="avatar"
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  alt="Han Solo"
-                />
-                <a slot="author">用户名</a>
-                <span slot="actions">回复</span>
-                <p slot="content">
-                  We supply a series of design principles, practical patterns and high quality design
-                  resources (Sketch and Axure).
-                </p>
-              </a-comment>
-              <a-comment>
-                <a-avatar
-                  slot="avatar"
-                  src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  alt="Han Solo"
-                />
-                <a slot="author">用户名</a>
-                <span slot="actions">回复</span>
-                <p slot="content">
-                  We supply a series of design principles, practical patterns and high quality design
-                  resources (Sketch and Axure).
-                </p>
-              </a-comment> -->
+              <span slot="actions" @click="addReplyComment(`${index}${replyIndex}`)">回复</span>
+              <div v-show="addReplyIptPos === `${index}${replyIndex}`" style="width:100%;">
+                <text-area
+                  :Status="!isNaN(addReplyIptPos)"
+                  :commentId="item.commentId"
+                  :toUsername="replyItem.username"
+                  @replycomment="replyComment"
+                ></text-area>
+              </div>
             </a-comment>
           </template>
+          <!-- /二级评论 -->
         </a-comment>
       </template>
+      <!-- /一级评论 -->
     </div>
   </div>
 </template>
@@ -174,16 +160,18 @@
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import { getMsgById, commentMsg } from '@/axios/api/message'
+import { getMsgById } from '@/axios/api/message'
 import { getUser } from '@/axios/api/user'
 import { pubComment, getAllComment, replyComment } from '@/axios/api/comment'
 import { Icon, Tooltip } from 'view-design'
 import moment from 'moment'
+import textArea from '@/components/common/textarea'
 
 export default {
   components: {
     Icon,
-    Tooltip
+    Tooltip,
+    textArea
   },
   data() {
     return {
@@ -197,17 +185,52 @@ export default {
         textAlign: 'center',
         theme: '#fff'
       },
-      commentBtnStatus: false, // 评论按钮的显示状态
-      replyVisible: false, // 回复评论的显示
       commentList: [], // 评论列表
-      replyIptPos: '' // 某个追评输入框的显示
+      commentContent: '', // 评论内容
+      commentStatus: false, // 评论组件的显示状态
+      replyVisible: false, // 回复评论的显示
+      replyIptPos: undefined, // 一层某个追评输入框的显示
+      addReplyIptPos: undefined, // 二层某个追评输入框的显示
+      placeholder: '请发表有价值的评论，良好的社区氛围大家一起维护。'
     }
   },
   created() {
     this.getMsg()
     this.getUser()
   },
+  watch: {
+    commentStatus(newVal) {
+      if(newVal) {
+        const elementNoFocus = document.getElementsByClassName('ipt_btn')[0]
+        const elementFocus = document.getElementsByClassName('focus_ipt_btn')[0]
+        document.getElementById('app').addEventListener('click', e => {
+          let status = e.target.parentElement == elementNoFocus || e.target == elementFocus || e.target.parentElement == elementFocus || e.target.parentElement.parentElement == elementFocus
+          if(!status) {
+            this.commentStatus = false
+          }
+        })
+      }
+    },
+    replyIptPos(newVal) {
+      if(!isNaN(newVal)) {
+        const elementFocus = document.getElementsByClassName('focus_ipt_btn')[0]._prevClass
+        const reply = document.getElementsByClassName('reply')[0]._prevClass
+        document.getElementById('app').addEventListener('click', e => {
+          let status = e.target._prevClass == reply || e.target._prevClass == elementFocus || e.target.parentElement._prevClass == elementFocus || e.target.parentElement.parentElement._prevClass == elementFocus
+          if(!status) {
+            this.replyIptPos = undefined
+          }
+        })
+      }
+    }
+  },
   methods: {
+    clickcapture() {
+      this.commentStatus = true
+      // this.$nextTick(() => {
+      //   this.$refs.textarea.focus()
+      // })
+    },
     // 获取当前登录的用户
     async getUser() {
       const uuid = this.$store.state.useruuid
@@ -227,14 +250,19 @@ export default {
     async getComment() {
       let { data } = await getAllComment({ msgId: this.message.msgId })
       this.commentList = data.reverse()
+      // this,commentList.forEach(items => items.commentReply.map(item => {
+      //   if(item.username.indexOf('QAQ') != '-1') {
+      //     return [...item, item.username.split('QAQ') || '']
+      //   }
+      //   return item
+      // }))
     },
     // 提交评论
-    async comment() {
-      const commentContent = this.$refs.commentText.innerText
-      if(commentContent.length < 1) {
-        this.$message.error('评论内容不可为空~')
-        return false
-      }
+    async comment(commentContent) {
+      // if(this.commentContent.length < 1) {
+      //   this.$message.error('评论内容不可为空~')
+      //   return false
+      // }
       const commentObj = {
         msgId: this.message.msgId,
         userId: this.currentUser.uuid,
@@ -248,11 +276,10 @@ export default {
         this.$message.error(data.statusText)
       } else {
         this.$message.success('评论成功~')
-        this.$refs.commentText.innerText = ''
-        this.commentBtnStatus = false
+        this.commentContent = ''
+        this.commentStatus = false
         this.getComment()
       }
-
     },
     //函数防抖
     debounce(func, wait) {
@@ -269,34 +296,42 @@ export default {
     // 回复输入框
     reply(index) {
       this.replyIptPos = index
-      console.log(index);
-      // this.$nextTick(() => {
-      //   this.$refs.replyCommentText.focus()
-      // })
-      // this.replyVisible = true
+    },
+    // 追评回复输入框
+    addReplyComment(index) {
+      this.addReplyIptPos = index
     },
     // 追评提交
-    async replyComment(commentId, index) {
-      const replyCommentContent = this.$refs.replyCommentText[index].innerText
+    async replyComment({ toUsername, commentId, replyCommentContent }) {
       const replyCommentObj = {
         commentId,
         userId: this.currentUser.uuid,
-        username: this.currentUser.username,
+        username: this.currentUser.username + 'QAQ' + toUsername,
         userAvatar: this.currentUser.avater,
         replyCommentDate: moment().format('YYYY.MM.DD H:mm:ss'),
-        replyCommentContent: replyCommentContent
+        replyCommentContent
       }
-      // this.replyCommentList.push(replyCommentObj)
       let data = await replyComment(replyCommentObj)
       if(data.status === 200) this.$message.success('评论成功')
-      this.replyIptPos = ''
+      this.replyIptPos = undefined
+      this.addReplyIptPos = undefined
       this.getComment()
+    },
+    // 追评回复的提交
+    addreplycomment({ replyCommentContent, toUsername }) {
+      console.log(replyCommentContent, toUsername);
+
     }
+  },
+  mounted() {
+    this.$bus.$on('commentContent', data => {
+      this.commentContent = data
+    })
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" >
 .ant-layout-content {
   min-height: 88vh;
   display: flex;
@@ -307,7 +342,7 @@ export default {
   background-color: #fff;
 }
 .ql-container {
-  border: 0;
+  border: 0 !important;
 }
 .title h1 {
   font-size: 1.7rem;
@@ -385,8 +420,6 @@ export default {
   }
 }
 .bottom_toolBar {
-  // position: fixed;
-  // bottom: 0;
   box-shadow: 1px -1px 3px #eee;
   width: 100%;
   height: 50px;
@@ -450,63 +483,70 @@ export default {
   background-color: #fff;
   .express_comment {
     display: flex;
-    justify-content: center;
     align-items: center;
     min-height: 60px;
-      .avatar {
-        margin: 0 5px;
-      }
-    // img {
-    //   width: 24px;
-    //   border-radius: 50%;
-    //   margin: 0 10px;
-    // }
-  }
-  .ipt_cmt {
-    flex: 1;
-    position: relative;
-    transition: all .8s ease-out .7s;
-    background-color: transparent;
-    .ipt {
+    .avatar {
+      margin: 0 5px;
+    }
+    .ipt_btn {
+      flex: 1;
       border: 1px solid #eee;
-      margin-top: 10px;
-      padding: 2px;
-      outline: none;
-      min-height: 40px;
-      max-height: 100px;
-      text-indent: 8px;
       border-radius: 5px;
-      overflow: auto;
-      &:focus-within {
-        height: 100px;
+      height: auto;
+      display: flex;
+      flex-direction: row;
+      padding: 3px;
+      input {
+        border: 0;
+        height: auto;
+        white-space: wrap;
+        box-shadow: none;
       }
-      // 滚动条整体部分
-      &::-webkit-scrollbar {
-        width: 2px;
-      }
-      //滚动的滑块
-      &::-webkit-scrollbar-thumb{
-        border-radius: 3px;
-        background-color: #ccc//滚动条的颜色
-      }
-      //内层滚动槽
-      &::-webkit-scrollbar-track-piece{
-        background-color:#ccc ;
+      button {
+        font-size: 12px;
+        border-radius: 50px;
+        border: 1px solid #eee;
+        &:hover {
+          background-color: rgb(252, 25, 68);
+          color: #fff;
+        }
       }
     }
+  }
+  .ipt_cmt {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eee;
+    padding: 3px;
+    border-radius: 5px;
+    //   &:focus-within {
+    //     height: 100px;
+    //   }
+    //   // 滚动条整体部分
+    //   &::-webkit-scrollbar {
+    //     width: 2px;
+    //   }
+    //   //滚动的滑块
+    //   &::-webkit-scrollbar-thumb{
+    //     border-radius: 3px;
+    //     background-color: #ccc//滚动条的颜色
+    //   }
+    //   //内层滚动槽
+    //   &::-webkit-scrollbar-track-piece{
+    //     background-color:#ccc ;
+    //   }
+    textarea.ant-input {
+      border: 0;
+      min-height: 80px;
+      height: 100%;
+      box-shadow: none;
+    }
     button {
-      position: absolute;
-      bottom: 4px;
-      right: 16px;
+      align-self: end;
+      font-size: 12px;
       border-radius: 50px;
       background-color: #eee;
-      color: #000;
       border-color: transparent;
-      z-index: 999;
-      &:hover {
-        background-color: rgb(252, 25, 68);
-        color: #fff;
-      }
     }
     .btn {
       background-color: rgb(252, 25, 68);
