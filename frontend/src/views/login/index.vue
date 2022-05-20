@@ -157,7 +157,6 @@ export default {
       }
       this.$message.success('登录成功!')
       this.$store.dispatch('acLogin', res.data.data)
-      // localStorage.setItem('token', res.data.token)
       localStorage.setItem('uuid', res.data.data.uuid)
       this.$router.push({path: '/index'})
     },
@@ -188,9 +187,7 @@ export default {
       this.regForm.password = this.setMd5(this.regForm.password)
       let data = await register(this.regForm)
       this.$message.success('注册成功，跳转登录页面~')
-      // localStorage.setItem('uuid', res.data.data.uuid)
       setTimeout(() => {
-        // this.$router.push({path: '/index'})
         this.toLogin()
       }, 1500)
     },
@@ -265,7 +262,6 @@ a-form-model-item {
   display: flex;
   .container_regist {
     flex: 5;
-    /* background-image: url(../img/1.jpg); */
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,11 +1,11 @@
 <template>
   <div class="" id="app">
     <a-table :pagination="pagination" :dataSource="msgList" :columns="columns" :row-key="record => record.msgId" :scroll="{ x: 1200, y: 450 }" :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }">
-      <span slot="index" slot-scope="text, record" v-for="(item, index) in msgList">{{ index }}</span>
+      <!-- <span slot="index" slot-scope="text, record" v-for="(item, index) in msgList">{{ index }}</span> -->
       <!-- <template slot="order" slot-scope="text">{{ text }}</template> -->
       <template slot="messagetitle" slot-scope="text"><a :href="href" @click="texthref(text)">{{ text }}</a></template>
       <span slot="open"><a-switch default-checked @change="onChange" /></span>
-      <span slot="action" slot-scope="text, record">
+      <span slot="action" slot-scope="text">
         <a-popconfirm placement="topLeft" ok-text="Yes" cancel-text="No" @confirm="deleteMsg(text.msgId)">
           <template slot="title">
             <p>您确定要删除吗？</p>
@@ -72,65 +72,6 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
-// #region
-// const data = [
-//   {
-//     key: '1',
-//     message: '《赤壁赋》',
-//     date: '2021-11-12'
-//   },
-//   {
-//     key: '2',
-//     message: '《离骚》',
-//     date: '2022-01-01'
-//   },
-//   {
-//     key: '3',
-//     message: '《春晓》',
-//     date: '2022-01-02'
-//   },
-//   {
-//     key: '4',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '5',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '6',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '7',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '8',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '9',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '10',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-//   {
-//     key: '11',
-//     message: '《阿房宫赋》',
-//     date: '2021-08-09'
-//   },
-// ]
-// #endregion
 export default {
   name: "message",
   data () {
@@ -141,25 +82,25 @@ export default {
         return this.msgList.length
       },
       pagination: {
-      size: 'small',
-      defaultPageSize: 5,
-      pageSize: 10,
-      showTotal: total => {
-        return "共" + this.total() + "条"
-      },
-      style: {
-        background: '#fff',
-        width: '100%',
-        margin: '0',
-        display: 'flex',
-        justifyContent: 'end',
-        padding: '10px'
-      }
+        size: 'small',
+        defaultPageSize: 5,
+        pageSize: 10,
+        showTotal: () => {
+          return "共" + this.total() + "条"
+        },
+        style: {
+          background: '#fff',
+          width: '100%',
+          margin: '0',
+          display: 'flex',
+          justifyContent: 'end',
+          padding: '10px'
+        }
       },
       selectedRowKeys: [],
       href: 'javascript:;'
-  }
-},
+    }
+  },
 created() {
   this.getSelfMsg()
 },
@@ -170,7 +111,6 @@ methods: {
     this.msgList = data.reverse()
   },
   onSelectChange(selectedRowKeys, selectedRows) {
-    console.log(selectedRowKeys, selectedRows)
     this.selectedRowKeys = selectedRowKeys
   },
   async deleteMsg(msgId) {
@@ -186,9 +126,7 @@ methods: {
     }
   },
   onChange(checked) {
-      console.log(`a-switch to ${checked}`)
-  },
-  texthref(item) {
+    console.log(`a-switch to ${checked}`)
   }
 }
 }

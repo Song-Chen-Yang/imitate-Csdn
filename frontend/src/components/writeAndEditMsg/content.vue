@@ -28,6 +28,7 @@
             class="editor"
             ref="myQuillEditor"
             :options="editorOption"
+
             placeholder="请输入公告内容"
             @change="onEditorChange($event)"
           />
@@ -197,9 +198,6 @@ export default {
     titleLen(val) {
       return val.length >= 5 ? val.length +'/40' : '还需输入'+(5-val.length)+'个字'
     }
-  },
-  mounted() {
-    console.log(document.getElementsByClassName('editor'));
   }
 }
 </script>
@@ -213,13 +211,6 @@ export default {
   .ql-editor {
     min-height: 400px;
   }
-}
-.ant-divider {
-  width: 100vw;
-}
-.ant-layout-content {
-  background-image:  linear-gradient(#00d2d3 0.9px, transparent 0.9px), linear-gradient(to right, #00d2d3 0.9px, #e5e5f7 0.9px);
-  background-size: 18px 18px;
 }
 .edit-content {
   background: #fff;

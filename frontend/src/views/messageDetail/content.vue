@@ -20,7 +20,7 @@
           <span>订阅专栏</span>
         </span>
       </div>
-      <div class="ql-container ql-snow">
+      <div class="ql-container ql-snow" style="border: 0">
         <div class="content ql-editor" v-html="message.msgContent"></div>
       </div>
     </a-layout-content>
@@ -38,25 +38,25 @@
           <a-space size="middle" class="space" >
             <span>
               <Tooltip content="赞" theme="light" placement="top">
-                <a-icon type="like" :style="{fontSize}" theme="filled" />
+                <a-icon type="like" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'like', message.likes)" />
                 {{ message.likes }}
               </Tooltip>
             </span>
             <span>
               <Tooltip content="踩" theme="light" placement="top">
-                <a-icon type="dislike" :style="{fontSize}" theme="filled" />
+                <a-icon type="dislike" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'dislike')" />
                 {{ message.likes }}
               </Tooltip>
             </span>
             <span>
               <Tooltip content="评论" theme="light" placement="top">
-              <a-icon type="message" :style="{fontSize}" theme="filled" />
+                <a-icon type="message" :style="{fontSize}" theme="filled" />
                 {{ Array.isArray(message.comments) ? message.comments.length : message.comments }}
               </Tooltip>
             </span>
             <span>
               <Tooltip content="收藏" theme="light" placement="top">
-              <a-icon type="star" :style="{fontSize}" theme="filled" />
+                <a-icon type="star" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'star', message.stars)" />
                 {{ message.stars }}
               </Tooltip>
             </span>
@@ -66,7 +66,7 @@
               </Tooltip>
             </span>
             <span>
-              <a-tooltip :overlayStyle="overlayStyle" :autoAdjustOverflow="true">
+              <a-tooltip :autoAdjustOverflow="true">
                 <template slot="title">
                   <p style="text-align: center">扫一扫，分享内容</p>
                   <img style="width: 140px;margin: 4px 0;" src="@/assets/img/qrshare.jpg" alt="">
@@ -111,9 +111,9 @@
           </a-tooltip>
           <a slot="author">{{ item.username }}</a>
           <span slot="actions" class="reply" key="comment-nested-reply-to" @click="reply(index)">回复</span>
-          <div v-show="replyIptPos === index" style="width:100%;">
+          <div v-show="replyIptVisible === index" style="width:100%;">
             <text-area
-              :Status="!isNaN(replyIptPos)"
+              :Status="!isNaN(replyIptVisible)"
               :commentId="item.commentId"
               :toUsername="item.username"
               @replycomment="replyComment"
@@ -138,9 +138,9 @@
                {{replyItem.replyCommentContent}}
               </p>
               <span slot="actions" @click="addReplyComment(`${index}${replyIndex}`)">回复</span>
-              <div v-show="addReplyIptPos === `${index}${replyIndex}`" style="width:100%;">
+              <div v-show="addreplyIptVisible === `${index}${replyIndex}`" style="width:100%;">
                 <text-area
-                  :Status="!isNaN(addReplyIptPos)"
+                  :Status="!isNaN(addreplyIptVisible)"
                   :commentId="item.commentId"
                   :toUsername="replyItem.username"
                   @replycomment="replyComment"
@@ -160,13 +160,13 @@
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
-import { getMsgById } from '@/axios/api/message'
-import { getUser } from '@/axios/api/user'
-import { pubComment, getAllComment, replyComment } from '@/axios/api/comment'
-import { Icon, Tooltip } from 'view-design'
 import moment from 'moment'
+import { getUser } from '@/axios/api/user'
+import { Icon, Tooltip } from 'view-design'
+import { getMsgById } from '@/axios/api/message'
 import textArea from '@/components/common/textarea'
-
+import { collectMsg, likeMsg } from '@/axios/api/message'
+import { pubComment, getAllComment, replyComment } from '@/axios/api/comment'
 export default {
   components: {
     Icon,
@@ -180,17 +180,11 @@ export default {
       fontSize: '20px', // 作者栏的icon字号
       bottom: 0, // 作者栏固钉
       moment,
-      overlayStyle: { // 作者栏的气泡提示
-        width: '156px',
-        textAlign: 'center',
-        theme: '#fff'
-      },
       commentList: [], // 评论列表
       commentContent: '', // 评论内容
       commentStatus: false, // 评论组件的显示状态
-      replyVisible: false, // 回复评论的显示
-      replyIptPos: undefined, // 一层某个追评输入框的显示
-      addReplyIptPos: undefined, // 二层某个追评输入框的显示
+      replyIptVisible: undefined, // 一层某个追评输入框的显示
+      addreplyIptVisible: undefined, // 二层某个追评输入框的显示
       placeholder: '请发表有价值的评论，良好的社区氛围大家一起维护。'
     }
   },
@@ -211,14 +205,14 @@ export default {
         })
       }
     },
-    replyIptPos(newVal) {
+    replyIptVisible(newVal) {
       if(!isNaN(newVal)) {
         const elementFocus = document.getElementsByClassName('focus_ipt_btn')[0]._prevClass
         const reply = document.getElementsByClassName('reply')[0]._prevClass
         document.getElementById('app').addEventListener('click', e => {
           let status = e.target._prevClass == reply || e.target._prevClass == elementFocus || e.target.parentElement._prevClass == elementFocus || e.target.parentElement.parentElement._prevClass == elementFocus
           if(!status) {
-            this.replyIptPos = undefined
+            this.replyIptVisible = undefined
           }
         })
       }
@@ -227,9 +221,6 @@ export default {
   methods: {
     clickcapture() {
       this.commentStatus = true
-      // this.$nextTick(() => {
-      //   this.$refs.textarea.focus()
-      // })
     },
     // 获取当前登录的用户
     async getUser() {
@@ -281,6 +272,18 @@ export default {
         this.getComment()
       }
     },
+    async suport(msgId, type, nums) {
+      nums++
+      if(type == 'like') {
+        const data = await likeMsg({ msgId, likes: nums })
+        if(data.status == 200) this.$message.success('已点赞')
+      }
+      if(type == 'star') {
+        const data = await collectMsg({ msgId, stars: nums })
+        if(data.status == 200) this.$message.success('已收藏')
+      }
+      this.getMsg()
+    },
     //函数防抖
     debounce(func, wait) {
       let timeout;
@@ -295,11 +298,11 @@ export default {
     },
     // 回复输入框
     reply(index) {
-      this.replyIptPos = index
+      this.replyIptVisible = index
     },
     // 追评回复输入框
     addReplyComment(index) {
-      this.addReplyIptPos = index
+      this.addreplyIptVisible = index
     },
     // 追评提交
     async replyComment({ toUsername, commentId, replyCommentContent }) {
@@ -313,14 +316,9 @@ export default {
       }
       let data = await replyComment(replyCommentObj)
       if(data.status === 200) this.$message.success('评论成功')
-      this.replyIptPos = undefined
-      this.addReplyIptPos = undefined
+      this.replyIptVisible = undefined
+      this.addreplyIptVisible = undefined
       this.getComment()
-    },
-    // 追评回复的提交
-    addreplycomment({ replyCommentContent, toUsername }) {
-      console.log(replyCommentContent, toUsername);
-
     }
   },
   mounted() {
@@ -339,10 +337,7 @@ export default {
   flex-flow: column;
   padding: 15px;
   font-family: '微软雅黑';
-  background-color: #fff;
-}
-.ql-container {
-  border: 0 !important;
+  background-color: #fff !important;
 }
 .title h1 {
   font-size: 1.7rem;

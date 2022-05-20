@@ -55,3 +55,12 @@ export default {
   flex: 8;
 }
 </style>
+<style>
+.ant-layout:first-child {
+  background-image:  linear-gradient(#00d2d3 0.9px, transparent 0.9px), linear-gradient(to right, #00d2d3 0.9px, #e5e5f7 0.9px) !important;
+  background-size: 18px 18px;
+}
+.ant-layout:nth-child(2) {
+  background: transparent;
+}
+</style>

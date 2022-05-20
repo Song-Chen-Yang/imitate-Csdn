@@ -156,7 +156,6 @@ export default {
       menu: ['博客', '专栏课程', '问答', '社区', '下载', '插件'],
       current: ['博客'],
       scrollTop: '',
-      // writeStatus: false,
       buttonWidth: 20,
       isDefault: true // 是否默认头像
     }
@@ -199,7 +198,6 @@ export default {
       delete localStorage['currentUser']
       // delete localStorage['uuid']
       this.$message.success('已退出')
-      this.reload()
       this.$router.push({path: '/login'})
     }
   },

@@ -46,18 +46,13 @@
 import Header from '@/components/common/header'
 export default {
   components: {
-  Header
+    Header
   },
   data() {
     return {
       collapsed: false,
       defaultSelectedKyes: [this.$router.currentRoute.name]
-    };
-  },
-  watch: {
-    // $route(to, from) {
-    //   console.log(to, from);
-    // }
+    }
   },
   methods: {
     toIndex() {
@@ -86,7 +81,6 @@ export default {
     height: 32px;
     background: rgba(240, 144, 144, 0.2);
     margin: 16px;
-    /* color: #fff; */
     text-align: center;
     line-height: 32px;
     user-select: none;
@@ -94,6 +88,5 @@ export default {
 }
 .ant-layout-sider {
   background-color: #fff;
-  /* margin: 5px; */
 }
 </style>

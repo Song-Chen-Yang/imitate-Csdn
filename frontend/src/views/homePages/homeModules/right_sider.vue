@@ -56,56 +56,51 @@
 export default {
   data () {
     return {
-    experts: [
-    {name: '阳阳', pos: '前端工程师', zuopin: 200, bio: '从事6年互联网开发，主要使用Java...'},
-    {name: '红红', pos: 'Java', zuopin: 300, bio: '10年开始做c#开发，asp.net网站...'},
-    {name: '阿红', pos: 'Golang', zuopin: 400, bio: '目前就职北京新近纪科技有限责任...'}
-    ],
-    recommend: [
-    {content: '开发者学堂数据库专场开始报名！7大热营课程免费学！'},
-    {content: '对标大厂标准，C站(CSDN)软件工程师能力认证正式上线！'},
-    {content: 'TiDB黄东旭：In Community We Trust!'},
-    {content: '直接学Vue3吧，——对话Vue.js 作者尤雨溪'},
-    {content: 'UNIX的名字是我起的——对话UNIX开发者：Brian W.keraic'},
-    {content: '手撸 SpringBoot DDD 微服务脚手架'},
-    {content: '千万不要轻易尝试“熊猫烧香”，这不，我后悔了！'},
-    {content: '《关于我横扫一线厂的那些面经》滴滴Java岗(附答案)'},
-    {content: '学编程，有人苦苦坚持却半途而废，有人是边玩边学反而坚持到了最后！'},
-    {content: '难以置信！一篇文章就梳理清楚了Python Open CV的知识'},
-    ],
-    company: [
-    {name: '华为云官方博客', avatar: 'huawei', goods: 3005, funs: 6541, created: 213},
-    {name: '阿里云开发者', avatar: 'aliyun', goods: 12314, funs: 1234, created: 2313},
-    {name: '英特尔边缘计算社区', avatar: 'inter', goods: 1121, funs: 445654, created: 121},
-    {name: '京东科技开发者', avatar: 'jingdong', goods: 32131, funs: 4598, created: 9964},
-    {name: '人邮异步社区', avatar: 'renyou', goods: 23123, funs: 41222, created: 1022},
-    {name: '美团技术团队', avatar: 'meituan', goods: 23124, funs: 3452, created: 12312},
-    {name: '百度大脑', avatar: 'baidu', goods: 12321, funs: 12321, created: 12321}
-    ]
+      experts: [
+        {name: '阳阳', pos: '前端工程师', zuopin: 200, bio: '从事6年互联网开发，主要使用Java...'},
+        {name: '红红', pos: 'Java', zuopin: 300, bio: '10年开始做c#开发，asp.net网站...'},
+        {name: '阿红', pos: 'Golang', zuopin: 400, bio: '目前就职北京新近纪科技有限责任...'}
+      ],
+      recommend: [
+        {content: '开发者学堂数据库专场开始报名！7大热营课程免费学！'},
+        {content: '对标大厂标准，C站(CSDN)软件工程师能力认证正式上线！'},
+        {content: 'TiDB黄东旭：In Community We Trust!'},
+        {content: '直接学Vue3吧，——对话Vue.js 作者尤雨溪'},
+        {content: 'UNIX的名字是我起的——对话UNIX开发者：Brian W.keraic'},
+        {content: '手撸 SpringBoot DDD 微服务脚手架'},
+        {content: '千万不要轻易尝试“熊猫烧香”，这不，我后悔了！'},
+        {content: '《关于我横扫一线厂的那些面经》滴滴Java岗(附答案)'},
+        {content: '学编程，有人苦苦坚持却半途而废，有人是边玩边学反而坚持到了最后！'},
+        {content: '难以置信！一篇文章就梳理清楚了Python Open CV的知识'},
+      ],
+      company: [
+        {name: '华为云官方博客', avatar: 'huawei', goods: 3005, funs: 6541, created: 213},
+        {name: '阿里云开发者', avatar: 'aliyun', goods: 12314, funs: 1234, created: 2313},
+        {name: '英特尔边缘计算社区', avatar: 'inter', goods: 1121, funs: 445654, created: 121},
+        {name: '京东科技开发者', avatar: 'jingdong', goods: 32131, funs: 4598, created: 9964},
+        {name: '人邮异步社区', avatar: 'renyou', goods: 23123, funs: 41222, created: 1022},
+        {name: '美团技术团队', avatar: 'meituan', goods: 23124, funs: 3452, created: 12312},
+        {name: '百度大脑', avatar: 'baidu', goods: 12321, funs: 12321, created: 12321}
+      ]
     }
-  },
-  computed: {
-    // winWid () {
-    //   return ((document.body.offsetWidth || document.body.offsetWidth) / 10) * 2
-    // }
   },
   methods: {
     siderScroll () {
-    if (window.screenY > 100) {
-    this.siderStatus = true
-    }
+      if (window.screenY > 100) {
+        this.siderStatus = true
+      }
     },
     companyImg (src) {
-    return require('@/assets/img/'+ src.avatar +'.jpg')
+      return require('@/assets/img/'+ src.avatar +'.jpg')
     }
   },
   mounted () {
-  window.addEventListener('scroll', this.siderScroll)
+    window.addEventListener('scroll', this.siderScroll)
   },
   filters: {
-  subStr: function(val) {
-    return val.length >= 28 ? val.substring(0, 27) + '...' : val
-  }
+    subStr: function(val) {
+      return val.length >= 28 ? val.substring(0, 27) + '...' : val
+    }
   }
 }
 </script>

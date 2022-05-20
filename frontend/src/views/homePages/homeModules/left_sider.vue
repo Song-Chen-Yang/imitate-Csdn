@@ -31,11 +31,6 @@ export default {
 
     }
   },
-  computed: {
-    // winWid () {
-    //   return ((document.body.offsetWidth || document.body.offsetWidth) / 10) * 0.9
-    // }
-  },
   mounted() {
    window.addEventListener('scroll', this.scroll)
   }
@@ -68,7 +63,6 @@ export default {
   margin: 5px 0;
   color: #000;
   padding: 2px 5px;
-  /* filter: blur(1px); */
   transition: box-shadow .3s ease 0s ;
 }
 @keyframes label {

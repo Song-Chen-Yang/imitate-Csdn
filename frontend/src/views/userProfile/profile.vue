@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="background-color: #fff">
     <h2><b>基本信息</b></h2>
     <a-divider style="margin: 0;"></a-divider>
     <div class="avatar">
@@ -78,8 +78,7 @@
         <b>{{ EduInfo.majorVal || '未选择' }}</b>
         </a-form-item>
         <a-form-item label="入学时间">
-        <!-- <b>{{ grduaDate[0] || '未选择' | dateFilters }}-{{ grduaDate[1] || '' | dateFilters }}</b> -->
-        <b>{{ EduInfo.grduaDate ? EduInfo.grduaDate._i : '未选择' }}</b>
+        <b>{{ EduInfo.grduaDate.length || EduInfo.grduaDate ? EduInfo.grduaDate._i : '未选择' }}</b>
         </a-form-item>
         <a-form-item label="学历">
         <b>{{ EduInfo.xueli || '未选择' }}</b>
@@ -90,13 +89,6 @@
     <div class="edu_form" v-show="edu_edit_status">
     <a-form :form="form">
       <a-form-item label="学校名称">
-      <!-- <a-auto-complete
-        v-model="EduInfo.schoolVal"
-        :data-source="school"
-        style="width: 400px;font-size: 1rem;"
-        placeholder="请填写 例如:北京大学"
-        :filter-option="dataSearch"
-      > -->
       <a-auto-complete
         v-model="EduInfo.schoolVal"
         style="width: 400px;font-size: 1rem;"
@@ -119,15 +111,6 @@
         @change="grduaDateChoose"
         placeholder="Select Month"
         format="YYYY-MM" />
-      <!-- <a-range-picker
-          style="visibility: visible;width: 400px;float: left;font-size: 1rem;"
-          :placeholder="['请选择入学时间', '请选择毕业时间']"
-          format="YYYY-MM"
-          :value="EduInfo.grduaDate"
-          :mode="['month', 'month']"
-          @panelChange="handlePanelChange2"
-        >
-        </a-range-picker> -->
       </a-form-item>
       <a-form-item label="学历">
       <a-select placeholder="请选择" style="width: 400px" :value="EduInfo.xueli" @change="eduChoose">
@@ -203,7 +186,6 @@ export default {
       if(this.currentUser.avater.search('base64') != '-1') {
         this.isDefault = false
       }
-      // this.EduInfo.grduaDate = this.EduInfo.grduaDate.split('-').map(item => item.replace(/\//g, '-'))
     },
     // 个人信息的编辑
     edit(e) {
@@ -223,8 +205,6 @@ export default {
     },
     // 编辑确定
     async editok() {
-      // const value = e.target.previousElementSibling._value //值
-      let dataType = this.type
       const uuid = this.$store.state.useruuid
       if(this.type == 'username') {
         let data = await updateUsername({ uuid, username: this.currentUser.username })
@@ -262,7 +242,6 @@ export default {
     async handleChange(info) {
     let uuid = this.$store.state.useruuid
         if (info.file.status !== 'uploading') {
-          // console.log(info.file, info.fileList)
           let fileBase64 = await this.getBase64(info.file.originFileObj)
           let data = await uploadAvatar({ uuid, avater: fileBase64 })
           console.log(data);
@@ -275,9 +254,6 @@ export default {
         if (info.file.status === 'done') {
           this.$message.success(`${info.file.name} file uploaded successfully`)
         }
-        //  else if (info.file.status === 'error') {
-        //   this.$message.error(`${info.file.name} file upload failed.`)
-        // }
       },
     // 生日
     dateOnChange(time, timeString) {
@@ -302,7 +278,6 @@ export default {
     // 教育组件
     grduaDateChoose(dates, dateStrings) {
       this.EduInfo.grduaDate = dateStrings + ''
-      // this.EduInfo.grduaDate = [...value.map(item => this.dateFormat(item._d))]
     },
     eduChoose(value) {
         this.EduInfo.xueli = value
@@ -324,13 +299,10 @@ export default {
 .ant-input {
   width: 260px;
 }
-/* .ant-input-password {
-  width: 300px;
-} */
 #app {
   display: flex;
   flex-direction: column;
-  background-color: #fff !important;
+  background-color: #fff;
   white-space: nowrap;
   font-size: 1.1rem;
 }
@@ -350,7 +322,6 @@ form {
   }
 }
 .edu_form:hover .edit {
-  /* visibility: visible; */
   display: block;
 }
 .edu_form .edit {

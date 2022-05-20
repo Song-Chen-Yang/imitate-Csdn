@@ -11,7 +11,7 @@ Vue.use(Vuex)
 const state = {
   token: localStorage.getItem('token'),
   useruuid: localStorage.getItem('uuid'),
-  username: JSON.parse(localStorage.getItem('currentUser')).username
+  username: JSON.parse(localStorage.getItem('currentUser'))?.username
 }
 // 2、创建对象
 const store = new Vuex.Store({

@@ -9,13 +9,11 @@
       <div class="banner">
         <!-- 轮播图 -->
         <div class="banner_lb">
-          <!-- <img ref="banner" :src="changeBanner" alt=""> -->
-          <!-- <a-icon class="left_icon icon" type="left" @click="changeLeftBanner" /> -->
           <a-carousel autoplay arrows>
-            <div slot="prevArrow" slot-scope="props" class="custom-slick-arrow" style="left: 10px;z-index: 99">
+            <div slot="prevArrow" class="custom-slick-arrow" style="left: 10px;z-index: 99">
               <a-icon type="left" />
             </div>
-            <div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 10px;z-index: 99">
+            <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px;z-index: 99">
               <a-icon type="right" />
             </div>
             <div><img src="@/assets/img/0.jpg" alt=""></div>
@@ -24,7 +22,6 @@
             <div><img src="@/assets/img/3.jpg" alt=""></div>
             <div><img src="@/assets/img/4.jpg" alt=""></div>
           </a-carousel>
-          <!-- <a-icon class="right_icon icon" type="right" @click="changeRightBanner" /> -->
           <span class="bannerText">故宫时代</span>
         </div>
         <div class="banner_ri">
@@ -41,12 +38,6 @@
             </a-list-item-meta>
             <!-- 文章内容 -->
             <a target="_blank">{{ item.msgContentText | textEllipsis}}</a>
-            <!-- <template v-for="{type, text} in actions" style="user-select: none;" slot="actions">
-            <span :key="type" @click.stop="interaction">
-            <a-icon :type="type"></a-icon>
-            {{ item.star }}
-            </span>
-            </template> -->
             <!-- 点赞评论 -->
             <template slot="actions">
               <div style="user-select: none;">
@@ -60,7 +51,7 @@
                 </span>
                 <span @click.stop="interact(item.msgId, 'comments')" >
                   <a-icon class="interaction" type="message"/>
-                  {{ item.comments.length }}
+                  {{ item.comments }}
                 </span>
               </div>
             </template>
@@ -72,6 +63,7 @@
 </template>
 <script>
 import { getMsg, collectMsg, likeMsg } from '@/axios/api/message'
+import { getAllComment } from '@/axios/api/comment'
 export default {
   data () {
     return {
@@ -94,6 +86,10 @@ export default {
     async getMessage() {
       let { data } = await getMsg()
       this.msgList = data.reverse()
+      this.msgList.forEach(async item => {
+        let { data: comments } = await getAllComment({ msgId: item.msgId })
+        item.comments = comments.length
+      })
     },
     async interact (msgId, num, type) {
       num++
@@ -114,7 +110,6 @@ export default {
     },
     moveItem(item) {
       this.goalItem = item
-      // console.log(this.goalItem);
     },
     watchOne(uuid, msgId) {
       this.$router.push({path: '/messageDetail', query: { user_id: uuid, msg_Id: msgId }})
