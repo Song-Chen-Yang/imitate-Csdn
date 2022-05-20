@@ -30,7 +30,7 @@
         </div>
       </div>
       <!--  文章列表 -->
-      <a-list item-layout="vertical" size="large" :data-source="msgList">
+      <a-list item-layout="vertical" size="large" :data-source="messages">
           <a-list-item slot="renderItem" key="item.msgTitle" slot-scope="item" @mouseenter="moveItem(item)" @click.stop.prevent="watchOne(item.userId, item.msgId)">
             <a-list-item-meta>
               <a slot="title" :href="item.href" style="margin: -10px;font-size: .9rem;">{{ item.msgTitle }}</a>
@@ -126,11 +126,11 @@ export default {
   computed: {
     messages() {
       if(!this.searchData) {
-        return this.message
+        return this.msgList
       }
       if(this.searchData) {
-        return this.message.filter(item => {
-          return item.content.indexOf(this.searchData) !== -1
+        return this.msgList.filter(item => {
+          return item.msgTitle.indexOf(this.searchData) !== -1
         })
       }
     }

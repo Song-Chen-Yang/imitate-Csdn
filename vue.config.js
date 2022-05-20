@@ -1,4 +1,5 @@
-// module.exports = {
+module.exports = {
+  lintOnSave: false // 关闭语法检查
 //     devServer: {
 //         open: true, //是否自动弹出浏览器页面
 //         host: "localhost",
@@ -13,4 +14,4 @@
 //             'Access-Control-Allow-Origin': '*',
 //         }
 //     }
-// }
+}

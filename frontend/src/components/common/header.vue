@@ -29,8 +29,8 @@
           </div>
         </a-col>
         <a-col :span="6">
-          <a-input-search placeholder="input search text" @change="onSearch" @focus="onfocus" @blur="blur" allowClear />
-          <div class="inputSearch"></div>
+          <a-input-search placeholder="输入关键词进行搜索" @change="onSearch" allowClear />
+          <!-- <div class="inputSearch"></div> -->
         </a-col>
         <a-col :span="7">
           <!-- 登陆成功的显示 -->
@@ -169,14 +169,14 @@ export default {
         this.isDefault = false
       }
     },
-    onfocus() { // 搜索框聚焦
-      setTimeout(() => {
-        document.querySelector('.inputSearch').style.display = 'block'
-      }, 400)
-    },
-    blur() { // 搜索框失焦
-      document.querySelector('.inputSearch').style.display = 'none'
-    },
+    // onfocus() { // 搜索框聚焦
+      // setTimeout(() => {
+      //   document.querySelector('.inputSearch').style.display = 'block'
+      // }, 400)
+    // },
+    // blur() { // 搜索框失焦
+    //   document.querySelector('.inputSearch').style.display = 'none'
+    // },
     onSearch (val) { // 搜索框搜索
       if(val.target.value) {
         this.$bus.$emit('searchData', val.target.value)

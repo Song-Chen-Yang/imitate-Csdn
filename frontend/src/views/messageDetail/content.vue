@@ -45,7 +45,8 @@
             <span>
               <Tooltip content="踩" theme="light" placement="top">
                 <a-icon type="dislike" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'dislike')" />
-                {{ message.likes }}
+                <!-- {{ message.likes }} -->
+                0
               </Tooltip>
             </span>
             <span>
