@@ -71,6 +71,10 @@ var userSchema = new Schema({
   articles: {
     type: Schema.Types.ObjectId,
     ref: 'message'
+  },
+  province: {
+    type: String,
+    required: true
   }
 })
 

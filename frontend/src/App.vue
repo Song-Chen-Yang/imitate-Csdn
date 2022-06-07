@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-  <a-config-provider :locale="zh_CN">
-    <router-view v-if="isRouterAlive" />
-  </a-config-provider>
+  <transition enter-active-class="animate__animated animate__fadeIn">
+    <a-config-provider :locale="zh_CN">
+      <router-view v-if="isRouterAlive" />
+    </a-config-provider>
+  </transition>
   </div>
 </template>
 <script>
@@ -10,6 +12,7 @@
   import moment from 'moment'
   import 'moment/locale/zh-cn'
   moment.locale('zh-cn')
+  import 'animate.css'
 export default {
   name: 'App',
   provide() {

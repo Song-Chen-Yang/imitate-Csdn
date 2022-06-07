@@ -41,8 +41,8 @@ var messageSchema = new mongoose.Schema({
     default: 0
   },
   likes: {
-    type: Number,
-    default: 0
+    type: Array,
+    default: []
   },
   comments: {
     type: Array,

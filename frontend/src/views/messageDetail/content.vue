@@ -38,8 +38,8 @@
           <a-space size="middle" class="space" >
             <span>
               <Tooltip content="赞" theme="light" placement="top">
-                <a-icon type="like" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'like', message.likes)" />
-                {{ message.likes }}
+                <a-icon type="like" :style="{fontSize, 'color': likeColor ? '#6c5ce7' : 'rgb(140, 140, 140)'  }" theme="filled" @click="suport(message.msgId, 'like', message.likes)" />
+                {{ message.likes.length }}
               </Tooltip>
             </span>
             <span>
@@ -320,6 +320,11 @@ export default {
       this.replyIptVisible = undefined
       this.addreplyIptVisible = undefined
       this.getComment()
+    }
+  },
+  computed:{
+    likeColor() {
+      return this.message.likes.filter(item => item.userId == this.currentUser.userId)
     }
   },
   mounted() {

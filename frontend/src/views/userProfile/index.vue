@@ -35,7 +35,9 @@
         :style="{ margin: '12px', padding: '20px', background: '#fff', minHeight: '280px' }"
       >
       <keep-alive :include="['message', 'userFile']">
-        <router-view />
+        <transition enter-active-class="animate__animated animate__backInLeft">
+          <router-view />
+        </transition>
       </keep-alive>
       </a-layout-content>
     </a-layout>

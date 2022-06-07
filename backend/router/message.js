@@ -47,9 +47,15 @@ router.post('/collectMsg', async (req, res) => {
 
 // 点赞文章
 router.post('/likeMsg', async (req, res) => {
-  const { msgId, likes } = req.body
-  let data = await msgSchema.updateOne({ msgId }, { $set: { likes }})
-  if(data) res.send(data)
+  const { msgId, userId, likes } = req.body
+  const userLike = await msgSchema.find({ msgId })
+  if(userLike[0].likes.some(item => item.userId == userId)) {
+    let data = await msgSchema.updateOne({ msgId }, {$set: {likes}})
+    if(data) res.send(data)
+  } else {
+    let data = await msgSchema.updateOne({ msgId }, { $addToSet: { likes: { userId }}})
+    if(data) res.send(data)
+  }
 })
 
 // 根据用户id获取自己的文章

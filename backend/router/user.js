@@ -31,41 +31,31 @@ router.post('/getUser', async (req, res) => {
 
 // 登录
 router.post('/login', async (req, res) => {
-	const { username, password } = req.body
-	const data = await userSchema.findOne({ username, password })
+	const { password, email } = req.body
+	const data = await userSchema.findOne({ email, password })
 	let token = data ? generateToken(data) : ''
 	if (data === null) {
-		res.status(202).send({ data, msg: '账号或者密码错误' })
+		res.status(202).send({ data, msg: '邮箱或者密码错误' })
 	}
 	res.send({ data, msg: '登录成功', token })
 })
 
 // 注册
 router.post('/register', async (req, res) => {
-	// //#region
-	// const {
-	// 	uuid,
-	// 	username,
-	// 	password,
-	// 	email,
-	// 	nickname,
-	// 	created_time,
-	// 	last_modified_time,
-	// 	avater,
-	// 	bio,
-	// 	gender,
-	// 	birthday,
-	// 	status
-	// 	 } = req.body
-	// //#endregion
-	const { username, password, email } = req.body
-	let data = await new userSchema({
-		uuid: nanoid(),
-		username,
-		password,
-		email
-	}).save()
-	res.send(data)
+	const { username, password, email, province } = req.body
+	const user = await userSchema.find({ email })
+	if(user.length) {
+		res.status(202).send({ user, msg:'该邮箱已存在' })
+	} else {
+		const data = await new userSchema({
+			uuid: nanoid(),
+			username,
+			password,
+			email,
+			province
+		}).save()
+		res.send(user)
+	}
 })
 
 // 修改头像

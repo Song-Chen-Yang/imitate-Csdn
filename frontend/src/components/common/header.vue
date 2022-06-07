@@ -67,7 +67,26 @@
               </span>
               <span><a @click="e => e.preventDefault()">会员中心<a-icon type="crown" theme="twoTone" twoToneColor="#f1c40f" /></a></span>
               <span>
-                <a-dropdown>
+                <a-popover placement="bottom" arrow-point-at-center>
+                  <a @click="e => e.preventDefault()">收藏</a>
+                  <template #content>
+                    <div
+                      v-if="collect.length"
+                      @mouseenter="delCollectStatus = index"
+                      @mouseleave="delCollectStatus = undefined"
+                      class="collect"
+                      v-for="(item, index) in collect">
+                      <div class="collect-item" :key="item.msgId">
+                        <p>{{item.msgTitle}}</p>
+                        <a-icon v-show="delCollectStatus == index" :style="{fontSize}" type="close" @click="deleCollectMsg(item.msgId)" />
+                      </div>
+                    </div>
+                    <div v-if="!collect.length" class="collect">
+                      <a-empty :image="simpleImage" />
+                    </div>
+                  </template>
+                </a-popover>
+                <!-- <a-dropdown>
                   <a @click="e => e.preventDefault()">足迹</a>
                   <a-menu slot="overlay" class="foot_dropdown">
                     <a-menu-item key="1" class="messageList">
@@ -89,7 +108,7 @@
                       消息设置
                     </a-menu-item>
                   </a-menu>
-                </a-dropdown>
+                </a-dropdown> -->
               </span>
               <span><a @click="e => e.preventDefault()">动态</a></span>
               <a-dropdown>
@@ -147,6 +166,7 @@
 import {
   getUser
 } from '@/axios/api/user'
+import { Empty } from 'ant-design-vue'
 export default {
   inject:['reload'],
   name: 'Header',
@@ -157,7 +177,16 @@ export default {
       current: ['博客'],
       scrollTop: '',
       buttonWidth: 20,
-      isDefault: true // 是否默认头像
+      fontSize: 12,
+      isDefault: true, // 是否默认头像
+      delCollectStatus: undefined,
+      collect: [
+        {msgTitle:'我是标题1', time: '2022-2-2', msgId: 1},
+        {msgTitle:'我是标题2', time: '2022-2-2', msgId: 2},
+        {msgTitle:'我是标题3', time: '2022-2-2', msgId: 3},
+        {msgTitle:'我是标题4', time: '2022-2-2', msgId: 4},
+        {msgTitle:'我是标题5', time: '2022-2-2', msgId: 5}
+      ]
     }
   },
   methods: {
@@ -188,6 +217,11 @@ export default {
     menuChange (item) { // 菜单选择
       this.current[0] = item
     },
+    deleCollectMsg(msgId) {
+      const i = this.collect.findIndex(v => v.msgId == msgId)
+      console.log('索引值是', i)
+      this.collect.splice(i, 1)
+    },
     createTo (url) {
       this.$router.push({ path: url })
     },
@@ -208,6 +242,9 @@ export default {
       this.getCurrentUser()
     }
    })
+  },
+  beforeCreate() {
+    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
   },
   created() {
     this.getCurrentUser()
@@ -356,5 +393,37 @@ span>a {
 
 .ant-divider {
   margin-top: 40px;
+}
+
+.collect {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  &-item {
+    display: flex;
+    margin: 5px 0;
+    padding: 0 5px;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+    p {
+      border-bottom: 1px solid transparent;
+    }
+    &:hover p{
+      border-bottom: 1px solid #000;
+    }
+    &:hover{
+      background: rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .anticon {
+      transition: all .5s ease-out 0s;
+      &:hover {
+        transform: scale(1.2) rotate(-180deg);
+        text-shadow: 2px 2px #ff0000;
+      }
+    }
+  }
 }
 </style>

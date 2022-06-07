@@ -23,13 +23,20 @@
           <h3>登录</h3>
           <a-form-model  @keyup.enter.native="login" @submit.native.prevent>
             <a-form-model-item>
-              <a-input v-model="loginForm.username" placeholder="Username">
-                <a-icon
-                  slot="prefix"
-                  type="user"
-                  style="color: rgba(0, 0, 0, 0.25)"
-                />
-              </a-input>
+              <a-tooltip placement="topLeft" :visible="logEmailErrVisible">
+                <template slot="title">
+                  <span style="font-size: 6px;white-space: nowrap;"
+                    >请输入正确的qq邮箱地址:(包含'@'以及'.com')</span
+                  >
+                </template>
+                <a-input v-model="loginForm.email" ref="mail" placeholder="Email" @change="logEmailChange">
+                  <a-icon
+                    slot="prefix"
+                    type="mail"
+                    style="color: rgba(0, 0, 0, 0.25)"
+                  />
+                </a-input>
+              </a-tooltip>
             </a-form-model-item>
             <a-form-model-item>
               <a-input
@@ -60,15 +67,15 @@
           <h3>注册</h3>
           <a-form-model @submit="regist" @submit.native.prevent>
             <a-form-model-item>
-              <a-tooltip placement="topLeft" :visible="emailErrVisible">
+              <a-tooltip placement="topLeft" :visible="regEmailErrVisible">
                 <template slot="title">
-                  <span style="font-size: 6px"
-                    >请输入正确的邮箱地址:(包含'@'以及'.com')</span
+                  <span style="font-size: 6px;white-space: nowrap;"
+                    >请输入正确的qq邮箱地址:(包含'@'以及'.com')</span
                   >
                 </template>
                 <a-input
                   v-model="regForm.email"
-                  @change="emailChange"
+                  @change="regEmailChange"
                   Input.Email
                   type="email"
                   ref="email"
@@ -108,6 +115,9 @@
                 />
               </a-input>
             </a-form-model-item>
+            <a-form-model-item>
+              <a-cascader @change="provinceChange" :options="options" placeholder="选择省份"/>
+            </a-form-model-item>
           </a-form-model>
           <button class="btn" type="submit" @click.prevent="regist">点击注册</button>
         </form>
@@ -124,18 +134,38 @@ export default {
     return {
       status: 2, // 登录注册表单的显示状态
       loginForm: {
-        // username: "waynesong",
-        // password: "waynesong",
         username: "",
-        password: "",
+        password: ""
       },
       regForm: {
         username: "",
         password: "",
         email: "",
+        province: ""
       },
-      emailErrVisible: false,
-    };
+      regEmailErrVisible: false,
+      logEmailErrVisible: false,
+      options: [
+        {
+          value: '浙江',
+          label: '浙江'
+        },
+        {
+          value: '江苏',
+          label: '江苏'
+        },
+        {
+          value: '河南',
+          label: '河南',
+          children: [
+            {
+              value: '安阳',
+              label: '安阳'
+            }
+          ]
+        }
+      ]
+    }
   },
   methods: {
     // 加密
@@ -146,10 +176,10 @@ export default {
     },
     // 登录
     async login() {
-      if(!this.loginForm.username || this.loginForm.password.length < 6) {
-        this.$message.error('用户名长度需大于3,密码至少6位')
-        return false
-      }
+      // if(!this.loginForm.username || this.loginForm.password.length < 6) {
+      //   this.$message.error('用户名长度需大于3,密码至少6位')
+      //   return false
+      // }
       this.loginForm.password =  this.setMd5(this.loginForm.password)
       let res = await login(this.loginForm)
       if(!res?.data?.data) {
@@ -160,20 +190,41 @@ export default {
       localStorage.setItem('uuid', res.data.data.uuid)
       this.$router.push({path: '/index'})
     },
-    // 监听邮件输入框
-    emailChange(e) {
-      if (e.bubbles) {
-        if (!e.target.value.includes("@") && !e.target.value.includes(".com")) {
-          this.$refs.email.$refs.input.style.border = "1px solid #f00";
-          this.emailErrVisible = true;
-        } else if (
-          e.target.value.includes("@") &&
-          e.target.value.includes(".com")
-        ) {
-          this.$refs.email.$refs.input.style.border = "none";
-          this.emailErrVisible = false;
-        }
+    // 监听注册邮件输入框
+    regEmailChange() {
+      if (!this.regForm.email.includes("@")) {
+        this.$refs.email.$refs.input.style.border = "1px solid #f00";
+        this.regEmailErrVisible = true;
+      } else if (!this.regForm.email.includes(".com")) {
+        this.$refs.email.$refs.input.style.border = "1px solid #f00";
+        this.regEmailErrVisible = true;
+      }else if (
+        this.regForm.email.includes("@") &&
+        this.regForm.email.includes(".com")
+      ) {
+        this.$refs.email.$refs.input.style.border = "none";
+        this.regEmailErrVisible = false;
       }
+    },
+    // 监听登录邮件输入框
+    logEmailChange() {
+      if (!this.loginForm.email.includes("@")) {
+        this.$refs.mail.$refs.input.style.border = "1px solid #f00";
+        this.logEmailErrVisible = true;
+      } else if (!this.loginForm.email.includes(".com")) {
+        this.$refs.mail.$refs.input.style.border = "1px solid #f00";
+        this.logEmailErrVisible = true;
+      }else if (
+        this.loginForm.email.includes("@") &&
+        this.loginForm.email.includes(".com")
+      ) {
+        this.$refs.mail.$refs.input.style.border = "none";
+        this.logEmailErrVisible = false;
+      }
+    },
+    // 省份选择
+    provinceChange(value) {
+      this.regForm.province = value.join('')
     },
     // 注册
     async regist() {
@@ -186,6 +237,7 @@ export default {
       }
       this.regForm.password = this.setMd5(this.regForm.password)
       let data = await register(this.regForm)
+      if(!data) return
       this.$message.success('注册成功，跳转登录页面~')
       setTimeout(() => {
         this.toLogin()

@@ -41,15 +41,15 @@
             <!-- 点赞评论 -->
             <template slot="actions">
               <div style="user-select: none;">
-                <span @click.stop="interact(item.msgId, item.stars, 'stars')" >
+                <span @click.stop="interact(item, 'stars')" >
                   <a-icon class="interaction" type="star-o"/>
                   {{ item.stars }}
                 </span>
-                <span @click.stop="interact(item.msgId, item.likes, 'likes')" >
-                  <a-icon class="interaction" type="like-o"/>
-                  {{ item.likes }}
+                <span @click.stop="interact(item, 'likes')" >
+                  <a-icon :style="{'color': `${item.likes.filter(v => v.userId == item.userId )}` ? '#6c5ce7' : 'rgb(140, 140, 140)' }" class="interaction" type="like-o"/>
+                  {{ item.likes.length }}
                 </span>
-                <span @click.stop="interact(item.msgId, 'comments')" >
+                <span>
                   <a-icon class="interaction" type="message"/>
                   {{ item.comments }}
                 </span>
@@ -64,6 +64,9 @@
 <script>
 import { getMsg, collectMsg, likeMsg } from '@/axios/api/message'
 import { getAllComment } from '@/axios/api/comment'
+import { ClickCollect } from '@/axios/api/collect'
+import { nanoid } from 'nanoid'
+import moment from 'moment'
 export default {
   data () {
     return {
@@ -91,20 +94,28 @@ export default {
         item.comments = comments.length
       })
     },
-    async interact (msgId, num, type) {
-      num++
+    callbackIndex(arr, item) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i].userId === item) {
+          return i; //不支持则进入循环,判断为真后输入
+        }
+      }
+    },
+    async interact ({ msgId, stars, likes, msgTitle }, type) {
+      stars++
       if(type == 'stars') {
-        let data = await collectMsg({ msgId, stars: num })
-        if(data.status == 200) {
+        const userId = this.$store.state.useruuid
+        let res1 = await collectMsg({ msgId, stars })
+        let res2 = await ClickCollect({ userId, collects:{ msgId, collectId: nanoid(), msgTitle, collectTime: moment().format('YYYY.MM.DD H:mm:ss')}})
+        if(res1.status == 200 && res2.status == 200) {
           this.$message.success('收藏成功')
         }
       } else if (type == 'likes') {
-          let data = await likeMsg({ msgId, likes: num })
-          if(data.status == 200) {
-            this.$message.success('点赞成功')
-          }
-      } else if (type == 'comments') {
-        console.log('评论...')
+        const i = this.callbackIndex(likes, userId)
+        if(i >= 0) {
+          likes.splice(i, 1)
+        }
+        await likeMsg({ msgId, userId, likes })
       }
       this.getMessage()
     },
@@ -267,6 +278,6 @@ a {
 }
 .interaction:hover {
   transform: scale(1.2);
-  color: #6c5ce7;
+  color: #6c5ce7 !important;
 }
 </style>
