@@ -13,10 +13,13 @@ import 'view-design/dist/styles/iview.css'
 
 Vue.config.productionTip = false
 
+const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+Vue.prototype.$currentUser = currentUser
 Vue.prototype.dayjs = dayjs
 Vue.prototype.$http = requests
 Vue.prototype.$axios = axios
 Vue.prototype.$bus = new Vue()
+
 
 
 Vue.use(VueResource)

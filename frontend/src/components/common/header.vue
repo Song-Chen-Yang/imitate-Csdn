@@ -71,7 +71,7 @@
                   <a @click="e => e.preventDefault()">收藏</a>
                   <template #content>
                     <div
-                      v-if="collect.length"
+                      v-if="collect"
                       @mouseenter="delCollectStatus = index"
                       @mouseleave="delCollectStatus = undefined"
                       class="collect"
@@ -86,29 +86,6 @@
                     </div>
                   </template>
                 </a-popover>
-                <!-- <a-dropdown>
-                  <a @click="e => e.preventDefault()">足迹</a>
-                  <a-menu slot="overlay" class="foot_dropdown">
-                    <a-menu-item key="1" class="messageList">
-                      评论
-                    </a-menu-item>
-                    <a-menu-item key="2" class="messageList">
-                      关注
-                    </a-menu-item>
-                    <a-menu-item key="3" class="messageList">
-                      点赞
-                    </a-menu-item>
-                    <a-menu-item key="4" class="messageList">
-                      私信
-                    </a-menu-item>
-                    <a-menu-item key="5" class="messageList">
-                      系统通知
-                    </a-menu-item>
-                    <a-menu-item key="6" class="messageList">
-                      消息设置
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown> -->
               </span>
               <span><a @click="e => e.preventDefault()">动态</a></span>
               <a-dropdown>
@@ -163,9 +140,8 @@
 </div>
 </template>
 <script>
-import {
-  getUser
-} from '@/axios/api/user'
+import { getUser } from '@/axios/api/user'
+import { getCollect } from '@/axios/api/collect'
 import { Empty } from 'ant-design-vue'
 export default {
   inject:['reload'],
@@ -180,33 +156,31 @@ export default {
       fontSize: 12,
       isDefault: true, // 是否默认头像
       delCollectStatus: undefined,
-      collect: [
-        {msgTitle:'我是标题1', time: '2022-2-2', msgId: 1},
-        {msgTitle:'我是标题2', time: '2022-2-2', msgId: 2},
-        {msgTitle:'我是标题3', time: '2022-2-2', msgId: 3},
-        {msgTitle:'我是标题4', time: '2022-2-2', msgId: 4},
-        {msgTitle:'我是标题5', time: '2022-2-2', msgId: 5}
-      ]
+      collect: []
     }
   },
   methods: {
+    // 获取当前用户
     async getCurrentUser() {
       let uuid = this.$store.state.useruuid
       let { data } = await getUser({ uuid })
       this.currentUser = data
+      this.getCollects()
       if(data.avater.search('base64') != '-1') {
         this.isDefault = false
       }
     },
-    // onfocus() { // 搜索框聚焦
-      // setTimeout(() => {
-      //   document.querySelector('.inputSearch').style.display = 'block'
-      // }, 400)
-    // },
-    // blur() { // 搜索框失焦
-    //   document.querySelector('.inputSearch').style.display = 'none'
-    // },
-    onSearch (val) { // 搜索框搜索
+    // 获取收藏
+    async getCollects() {
+      const { uuid } = this.currentUser
+      const res = await getCollect({ userId: uuid })
+      console.log(res)
+      if(data) {
+        this.collect = data[0]?.collects
+      }
+    },
+    // 搜索框搜索
+    onSearch (val) {
       if(val.target.value) {
         this.$bus.$emit('searchData', val.target.value)
       }
@@ -214,13 +188,9 @@ export default {
         this.$bus.$emit('searchData', false)
       }
     },
-    menuChange (item) { // 菜单选择
+    // 菜单选择
+    menuChange (item) {
       this.current[0] = item
-    },
-    deleCollectMsg(msgId) {
-      const i = this.collect.findIndex(v => v.msgId == msgId)
-      console.log('索引值是', i)
-      this.collect.splice(i, 1)
     },
     createTo (url) {
       this.$router.push({ path: url })
@@ -242,9 +212,14 @@ export default {
       this.getCurrentUser()
     }
    })
+   this.$bus.$on('click-collect', data => {
+    if (data.status == 200) {
+      this.getCollects()
+    }
+   })
   },
   beforeCreate() {
-    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE;
+    this.simpleImage = Empty.PRESENTED_IMAGE_SIMPLE
   },
   created() {
     this.getCurrentUser()

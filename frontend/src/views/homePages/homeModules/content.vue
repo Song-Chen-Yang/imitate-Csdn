@@ -42,11 +42,11 @@
             <template slot="actions">
               <div style="user-select: none;">
                 <span @click.stop="interact(item, 'stars')" >
-                  <a-icon class="interaction" type="star-o"/>
-                  {{ item.stars }}
+                  <a-icon :style="{'color': `${item.stars.filter(v => v == currentUser.uuid )}` ? '#6c5ce7' : 'rgb(140, 140, 140)' }" class="interaction" type="star-o"/>
+                  {{ item.stars.length }}
                 </span>
                 <span @click.stop="interact(item, 'likes')" >
-                  <a-icon :style="{'color': `${item.likes.filter(v => v.userId == item.userId )}` ? '#6c5ce7' : 'rgb(140, 140, 140)' }" class="interaction" type="like-o"/>
+                  <a-icon :style="{'color': `${item.likes.filter(v => v.userId == currentUser.uuid )}` ? '#6c5ce7' : 'rgb(140, 140, 140)' }" class="interaction" type="like-o"/>
                   {{ item.likes.length }}
                 </span>
                 <span>
@@ -64,13 +64,14 @@
 <script>
 import { getMsg, collectMsg, likeMsg } from '@/axios/api/message'
 import { getAllComment } from '@/axios/api/comment'
-import { ClickCollect } from '@/axios/api/collect'
+import { clickCollect, getCollect } from '@/axios/api/collect'
 import { nanoid } from 'nanoid'
 import moment from 'moment'
 export default {
   data () {
     return {
       msgList: [],
+      currentUser: '',
       pagination: {
         onChange: page => {
           console.log(page)
@@ -94,6 +95,7 @@ export default {
         item.comments = comments.length
       })
     },
+    // 寻找数组中元素的索引
     callbackIndex(arr, item) {
       for (var i = 0; i < arr.length; i++) {
         if (arr[i].userId === item) {
@@ -101,21 +103,42 @@ export default {
         }
       }
     },
-    async interact ({ msgId, stars, likes, msgTitle }, type) {
-      stars++
+    async interact ({ msgId, likes, stars, userId, msgTitle }, type) {
+      let message
       if(type == 'stars') {
         const userId = this.$store.state.useruuid
-        let res1 = await collectMsg({ msgId, stars })
-        let res2 = await ClickCollect({ userId, collects:{ msgId, collectId: nanoid(), msgTitle, collectTime: moment().format('YYYY.MM.DD H:mm:ss')}})
+        if(stars.includes(userId)) {
+          stars.splice(stars.indexOf(userId), 1)
+          message = '已取消收藏'
+        } else {
+          message = '收藏成功'
+          stars.push(userId)
+        }
+        console.log(stars);
+        // 文章表里存用户的id
+        const res1 = await collectMsg({ msgId, stars })
+        // 收藏表里存收藏的文章的具体信息
+        const res2 = await clickCollect({ userId, collects:{ msgId, collectId: nanoid(), msgTitle, collectTime: moment().format('YYYY.MM.DD H:mm:ss')}})
         if(res1.status == 200 && res2.status == 200) {
-          this.$message.success('收藏成功')
+          this.$message.success(message)
+          const res3 = await getCollect({ userId })
+          console.log(res3);
+          this.$bus.$emit('click-collect', res3)
         }
       } else if (type == 'likes') {
-        const i = this.callbackIndex(likes, userId)
-        if(i >= 0) {
-          likes.splice(i, 1)
+        const flag = likes.some(v => v.userId == this.currentUser.uuid)
+        if(flag) {
+          let index = this.callbackIndex(likes, userId)
+          likes.splice(index, 1)
+          message = '已取消点赞~'
+        } else {
+          likes.push({userId: this.currentUser.uuid})
+          message = '点赞成功~'
         }
-        await likeMsg({ msgId, userId, likes })
+        const result = await likeMsg({ msgId, userId, likes })
+        if (result.status == 200) {
+          this.$message.success(message)
+        }
       }
       this.getMessage()
     },
@@ -149,6 +172,7 @@ export default {
   created() {
     localStorage.removeItem('token')
     this.getMessage()
+    this.currentUser = this.$currentUser
   },
   mounted() {
     this.$bus.$on('searchData', data => {

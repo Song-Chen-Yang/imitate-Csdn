@@ -5,7 +5,12 @@
         <h1 v-text="message.msgTitle"></h1>
       </div>
       <div class="messageInfo">
-        <p><span>我希望</span><span>{{message.msgDate}}</span><span><a-icon type="eye" /> 5554</span><span><a-icon type="star" theme="filled" /> 收藏{{message.stars}}</span></p>
+        <p>
+          <span>我希望</span>
+          <span>{{message.msgDate}}</span>
+          <span><a-icon type="eye" /> 5554</span>
+          <span><a-icon type="star" theme="filled" /> 收藏{{message && message.stars && message.stars.length}}</span>
+        </p>
         <p>分类专栏：<small><a-tag color="#95a5a6" style="font-size: .5rem;">面试智力题</a-tag></small></p>
         <span class="label">原创</span>
       </div>
@@ -38,14 +43,13 @@
           <a-space size="middle" class="space" >
             <span>
               <Tooltip content="赞" theme="light" placement="top">
-                <a-icon type="like" :style="{fontSize, 'color': likeColor ? '#6c5ce7' : 'rgb(140, 140, 140)'  }" theme="filled" @click="suport(message.msgId, 'like', message.likes)" />
-                {{ message.likes.length }}
+                <a-icon type="like" :style="{fontSize, 'color': likeColor ? '#6c5ce7' : 'rgb(81, 90, 110)'  }" theme="filled" @click="suport(message.msgId, 'like', message.likes)" />
+                {{ message && message.likes && message.likes.length }}
               </Tooltip>
             </span>
             <span>
               <Tooltip content="踩" theme="light" placement="top">
                 <a-icon type="dislike" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'dislike')" />
-                <!-- {{ message.likes }} -->
                 0
               </Tooltip>
             </span>
@@ -58,7 +62,7 @@
             <span>
               <Tooltip content="收藏" theme="light" placement="top">
                 <a-icon type="star" :style="{fontSize}" theme="filled" @click="suport(message.msgId, 'star', message.stars)" />
-                {{ message.stars }}
+                {{ message && message.stars && message.stars.length }}
               </Tooltip>
             </span>
             <span>
@@ -324,7 +328,7 @@ export default {
   },
   computed:{
     likeColor() {
-      return this.message.likes.filter(item => item.userId == this.currentUser.userId)
+      return this.message.userId == this.currentUser.uuid
     }
   },
   mounted() {

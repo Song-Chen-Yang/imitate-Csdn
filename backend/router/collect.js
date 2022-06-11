@@ -11,18 +11,23 @@ router.post('/collect', async (req, res) => {
     userId,
     collects
   } = req.body
-  const { msgId } = collects
-  const data = await collectSchema.updateOne({ userId }, { $addToSet: { collects }})
+  console.log(userId, collects);
+  const data = await collectSchema.updateOne({ userId }, { "$set": { collects }})
   res.send(data)
 })
 
-// 获取所有评论
-router.post('/getAllComment', async (req, res) => {
-  const { msgId } = req.body
-  const data = await commentSchema.find({ msgId })
+// 获取所有收藏
+router.post('/getCollect', async (req, res) => {
+  const { userId } = req.body
+  const data = await collectSchema.findOne({ userId })
   if(data) res.send(data)
-  else res.send('暂无评论')
 })
 
+// 删除收藏
+router.post('/deleteCollect', async(req, res) => {
+  const { userId, msgId } = req.body
+  const data = await collectSchema.updateOne({ userId }, { "$pull": { collects: { msgId } } })
+  if(data) res.send(data)
+})
 
 module.exports = router

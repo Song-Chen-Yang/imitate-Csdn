@@ -37,12 +37,12 @@ var messageSchema = new mongoose.Schema({
     required: true
   },
   stars: {
-    type: Number,
-    default: 0
+    type: Array,
+    default: ''
   },
   likes: {
     type: Array,
-    default: []
+    default: ''
   },
   comments: {
     type: Array,
