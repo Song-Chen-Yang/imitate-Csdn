@@ -1,9 +1,9 @@
 import request from '@/axios/request'
 
-// 收藏文章
-export function clickCollect(data) {
+// 更新收藏文章
+export function clickUpdateCollect(data) {
   return request({
-    url: '/collect',
+    url: '/updateCollect',
     method: 'post',
     data
   })

@@ -48,7 +48,7 @@ router.post('/collectMsg', async (req, res) => {
 // 点赞文章
 router.post('/likeMsg', async (req, res) => {
   const { msgId, userId, likes } = req.body
-  let result = await msgSchema.updateOne({ msgId }, { $set: {likes}})
+  let result = await msgSchema.updateOne({ msgId }, { $set: { likes }})
   if(result) res.send(result)
 })
 

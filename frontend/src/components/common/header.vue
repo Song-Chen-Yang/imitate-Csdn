@@ -141,7 +141,7 @@
 </template>
 <script>
 import { getUser } from '@/axios/api/user'
-import { getCollect } from '@/axios/api/collect'
+import { getCollect, deleteCollect } from '@/axios/api/collect'
 import { Empty } from 'ant-design-vue'
 export default {
   inject:['reload'],
@@ -173,8 +173,7 @@ export default {
     // 获取收藏
     async getCollects() {
       const { uuid } = this.currentUser
-      const res = await getCollect({ userId: uuid })
-      console.log(res)
+      const { data } = await getCollect({ userId: uuid })
       if(data) {
         this.collect = data[0]?.collects
       }
@@ -195,6 +194,14 @@ export default {
     createTo (url) {
       this.$router.push({ path: url })
     },
+    async deleCollectMsg(msgId) {
+      const userId = this.$store.state.useruuid
+      const result = await deleteCollect({userId, msgId})
+      if (result.status = 200) {
+        this.$bus.$emit('header-upload', true)
+      }
+      this.getCollects()
+    },
     scroll () {
       this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
     },
@@ -213,7 +220,7 @@ export default {
     }
    })
    this.$bus.$on('click-collect', data => {
-    if (data.status == 200) {
+    if (data == 200) {
       this.getCollects()
     }
    })
@@ -223,7 +230,11 @@ export default {
   },
   created() {
     this.getCurrentUser()
-}
+  },
+  beforeDestory() {
+    $bus.$off('click-collect', {})
+    $bus.$off('upload', {})
+  }
 }
 </script>
 <style lang="less" scoped>

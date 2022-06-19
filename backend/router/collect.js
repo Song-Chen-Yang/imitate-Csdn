@@ -6,20 +6,38 @@ var app = express()
 var collectSchema = mongoose.model('collect')
 
 // 收藏文章
-router.post('/collect', async (req, res) => {
+router.post('/saveCollect', async (req, res) => {
   const {
     userId,
     collects
   } = req.body
-  console.log(userId, collects);
-  const data = await collectSchema.updateOne({ userId }, { "$set": { collects }})
+  const data = await new collectSchema({ userId, collects }).save()
+  res.send(data)
+})
+
+// 更新收藏文章
+router.post('/updateCollect', async (req, res) => {
+  const {
+    userId,
+    msgId,
+    collectId,
+    msgTitle,
+    collectTime
+  } = req.body
+  const result = await collectSchema.findOne({ userId })
+  let data
+  if(result == null) {
+    data = await new collectSchema({ userId, collects: [{ msgId, collectId, msgTitle, collectTime }] }).save()
+  } else {
+    data = await collectSchema.updateOne({ userId }, { $addToSet: { collects: [{ msgId, collectId, msgTitle, collectTime }]}})
+  }
   res.send(data)
 })
 
 // 获取所有收藏
 router.post('/getCollect', async (req, res) => {
   const { userId } = req.body
-  const data = await collectSchema.findOne({ userId })
+  const data = await collectSchema.find({ userId })
   if(data) res.send(data)
 })
 

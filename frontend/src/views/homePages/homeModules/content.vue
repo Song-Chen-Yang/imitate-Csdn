@@ -64,7 +64,7 @@
 <script>
 import { getMsg, collectMsg, likeMsg } from '@/axios/api/message'
 import { getAllComment } from '@/axios/api/comment'
-import { clickCollect, getCollect } from '@/axios/api/collect'
+import { clickUpdateCollect, deleteCollect,  getCollect } from '@/axios/api/collect'
 import { nanoid } from 'nanoid'
 import moment from 'moment'
 export default {
@@ -103,27 +103,26 @@ export default {
         }
       }
     },
-    async interact ({ msgId, likes, stars, userId, msgTitle }, type) {
+    async interact ({ msgId, likes, stars, msgTitle }, type) {
       let message
+      const userId = this.$store.state.useruuid
       if(type == 'stars') {
-        const userId = this.$store.state.useruuid
         if(stars.includes(userId)) {
           stars.splice(stars.indexOf(userId), 1)
           message = '已取消收藏'
+          await deleteCollect({ userId, msgId })
         } else {
           message = '收藏成功'
           stars.push(userId)
+          // 收藏表里存收藏的文章的具体信息
+          await clickUpdateCollect({ userId, msgId, collectId: nanoid(), msgTitle, collectTime: moment().format('YYYY.MM.DD H:mm:ss')})
         }
-        console.log(stars);
         // 文章表里存用户的id
-        const res1 = await collectMsg({ msgId, stars })
-        // 收藏表里存收藏的文章的具体信息
-        const res2 = await clickCollect({ userId, collects:{ msgId, collectId: nanoid(), msgTitle, collectTime: moment().format('YYYY.MM.DD H:mm:ss')}})
-        if(res1.status == 200 && res2.status == 200) {
+        const result1 = await collectMsg({ msgId, stars })
+        if(result1.status == 200) {
           this.$message.success(message)
-          const res3 = await getCollect({ userId })
-          console.log(res3);
-          this.$bus.$emit('click-collect', res3)
+          const result2 = await getCollect({ userId })
+          this.$bus.$emit('click-collect', result2.status)
         }
       } else if (type == 'likes') {
         const flag = likes.some(v => v.userId == this.currentUser.uuid)
@@ -178,9 +177,15 @@ export default {
     this.$bus.$on('searchData', data => {
       this.searchData = data
     })
+    this.$bus.$on('header-upload', data => {
+      if (data) {
+
+      }
+    })
   },
   beforeDestory() {
     $bus.$off('searchData', {})
+    $bus.$off('header-upload', {})
     this.goalItem = null
   }
 }
